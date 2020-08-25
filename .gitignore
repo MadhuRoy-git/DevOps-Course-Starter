@@ -115,5 +115,3 @@ env/
 ### Configuration files ###
 .env
 
-### Secrets files ###
-secrets.py

@@ -6,7 +6,7 @@ app.config.from_object('flask_config.Config')
 
 @app.route('/')
 def index():
-    return render_template('index.html', mylist=trello.get_todo_cards_for_board())
+    return render_template('index.html', mylist=trello.get_cards_for_board())
 
 @app.route('/add', methods=['POST'])
 def add():
