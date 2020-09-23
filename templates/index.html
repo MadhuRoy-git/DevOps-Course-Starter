@@ -2,7 +2,7 @@
 <h1>To-Do App</h1>
 <p>Just another to-do app.</p>
 <h2 ><b>Items</b></h2><br>
-{% for listitem in mylist %}</span></h2>
+{% for listitem in view_model.items %}</span></h2>
 <h5 class="mb-1">{{ listitem.position }}: {{ listitem.name }}</h5>
 <small>status: {{ listitem.status }}</small>
 <small>description: {{ listitem.description }}</small>
