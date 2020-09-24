@@ -7,7 +7,8 @@ app.config.from_object('flask_config.Config')
 
 @app.route('/')
 def index():
-    item_view_model = ViewModel(trello.get_cards_for_board())
+    items = trello.get_items()
+    item_view_model = ViewModel(items[0], items[1], items[2])
     return render_template('index.html', view_model=item_view_model)
 
 @app.route('/add', methods=['POST'])
@@ -15,6 +16,11 @@ def add():
     name = request.form.get('new_item_name')
     description = request.form.get('new_item_description')
     trello.create_item(name, description)
+    return redirect(url_for('index'))
+
+@app.route('/start/<item_id>', methods=['POST'])
+def start_item(item_id):
+    trello.start_item(item_id)
     return redirect(url_for('index'))
 
 @app.route('/complete/<item_id>', methods=['POST'])

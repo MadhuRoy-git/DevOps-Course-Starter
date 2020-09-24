@@ -4,11 +4,35 @@ from card import Card
 
 key = os.getenv('apiKey')
 token = os.getenv('apiToken')
+board_id = os.getenv('boardId')
 
 TODO_LIST_ID = '5f3a9a92b421455eaa2ca175'
+DOING_LIST_ID = '5f3a9a92b421455eaa2ca176'
 DONE_LIST_ID = '5f3a9a92b421455eaa2ca177'
 
-def get_cards_for_board():
+
+def get_items():
+    """
+    Fetches all cards from our Trello board.
+    Returns:
+        list: The nested list of cards containing all cards constructed using the Card class.
+    """
+    todo_cards = []
+    doing_cards = []
+    done_cards = []
+    cards = get_cards_from_board(board_id)
+    for card in cards :
+        list_name = get_list_name(card['id'])
+        new_card = Card(card['id'], card['name'], card['desc'], list_name, card['dateLastActivity'])
+        if list_name == "To Do":
+            todo_cards.append(new_card)
+        elif list_name == "Doing":
+            doing_cards.append(new_card)
+        else:
+            done_cards.append(new_card)
+    return [todo_cards, doing_cards, done_cards]
+
+def get_cards_from_board(board_id):
     """
     Fetches all cards from the board.
 
@@ -21,13 +45,9 @@ def get_cards_for_board():
         'token': token
     }
    
-    board_id = os.getenv('boardId')
-    all_cards = []
     url = f"https://api.trello.com/1/boards/{board_id}/cards"
-    cards = requests.request("GET", url, params=query)
-    for card in cards.json():
-        all_cards.append(Card(card['id'], card['pos'], card['name'], card['desc'], get_list_name(card['id'])))
-    return all_cards
+
+    return requests.request("GET", url, params=query).json()
 
 def get_list_name(card_id):
     """
@@ -56,7 +76,7 @@ def create_item(title, description):
         'token': token,
         'name': title, 
         'desc': description,
-        'pos': len(get_cards_for_board()) + 1, 
+        'pos': len(get_cards_from_board(board_id)) + 1, 
         'idList': TODO_LIST_ID
     }
     card = requests.request("POST", url, params=query)
@@ -72,6 +92,18 @@ def complete_item(item_id):
         'key': key,
         'token': token,
         'idList': DONE_LIST_ID
+    }
+    requests.request("PUT", url, params=query)
+
+def start_item(item_id):
+    """
+    Moves a card to the 'DOING' list of the board.
+    """
+    url = f"https://api.trello.com/1/cards/{item_id}"
+    query = {
+        'key': key,
+        'token': token,
+        'idList': DOING_LIST_ID
     }
     requests.request("PUT", url, params=query)
 
