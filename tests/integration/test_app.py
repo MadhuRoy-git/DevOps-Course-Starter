@@ -25,7 +25,7 @@ def test_index_page(mock_get_requests, client):
     assert response.headers['Content-Type'] == "text/html; charset=utf-8"
 
 def mock_request(method, url, params):
-    data = {
+    data = [{
         "id": "5f3aa16af331a53956b9b290",
         "checkItemStates": "TestStatus",
         "closed": "false",
@@ -82,7 +82,7 @@ def mock_request(method, url, params):
             "size": "normal",
             "brightness": "light"
         }
-    }
+    }]
 
     list = {
         "id": "5f3a9d90546f2731c72baf4c",
@@ -114,7 +114,7 @@ def mock_request(method, url, params):
         # sample_trello_lists_response should point to some test response data
         response.json.return_value = data
         return response
-    if url == f'https://api.trello.com/1/cards/1/list':
+    if url == f'https://api.trello.com/1/cards/5f3aa16af331a53956b9b290/list':
         response = Mock()
         # sample_trello_lists_response should point to some test response data
         response.json.return_value = list
