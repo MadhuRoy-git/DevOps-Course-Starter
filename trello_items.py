@@ -3,10 +3,6 @@ import os
 from card import Card
 from flask import current_app as app
 
-key = os.getenv('key')
-token = os.getenv('token')
-boardid = os.getenv('boardid')
-
 TODO_LIST_ID = '5f3a9a92b421455eaa2ca175'
 DOING_LIST_ID = '5f3a9a92b421455eaa2ca176'
 DONE_LIST_ID = '5f3a9a92b421455eaa2ca177'
@@ -21,6 +17,7 @@ def get_items():
     todo_cards = []
     doing_cards = []
     done_cards = []
+    boardid = os.getenv('boardId')
     cards = get_cards_from_board(boardid)
     for card in cards :
         list_name = get_list_name(card['id'])
@@ -41,6 +38,8 @@ def get_cards_from_board(board_id):
         list: The list of cards.
     """
 
+    key = os.getenv('apiKey')
+    token = os.getenv('apiToken')
     query = {
         'key': key,
         'token': token
@@ -56,6 +55,8 @@ def get_list_name(card_id):
     Returns:
         string: The list's name.
     """
+    key = os.getenv('apiKey')
+    token = os.getenv('apiToken')
     url = f"https://api.trello.com/1/cards/{card_id}/list"
     query = {
         'key': key,
@@ -71,6 +72,9 @@ def create_item(title, description):
     Returns:
         Card: The newly created Card object.
     """
+    key = os.getenv('apiKey')
+    token = os.getenv('apiToken')
+    boardid = os.getenv('boardId')
     url = "https://api.trello.com/1/cards"
     query = {
         'key': key,
@@ -88,6 +92,8 @@ def complete_item(item_id):
     """
     Moves a card to the 'DONE' list of the board.
     """
+    key = os.getenv('apiKey')
+    token = os.getenv('apiToken')
     url = f"https://api.trello.com/1/cards/{item_id}"
     query = {
         'key': key,
@@ -100,6 +106,8 @@ def start_item(item_id):
     """
     Moves a card to the 'DOING' list of the board.
     """
+    key = os.getenv('apiKey')
+    token = os.getenv('apiToken')
     url = f"https://api.trello.com/1/cards/{item_id}"
     query = {
         'key': key,
@@ -113,6 +121,8 @@ def undo_item(item_id):
     """
     Moves a card to the 'TODO' list of the board.
     """
+    key = os.getenv('apiKey')
+    token = os.getenv('apiToken')
     url = f"https://api.trello.com/1/cards/{item_id}"
     query = {
         'key': key,
