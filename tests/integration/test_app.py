@@ -15,35 +15,35 @@ def client():
     with test_app.test_client() as client: 
         yield client
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_index_page(mock_get_requests, client):
     # Replace call to requests.get(url) with our own function
-    mock_get_requests.side_effect = mock_get_cards
+    mock_get_requests.side_effect = mock_request
 
     response = client.get('/')
     assert response.status_code == 200
     assert response.headers['Content-Type'] == "text/html; charset=utf-8"
 
-def mock_get_cards(url, params):
+def mock_request(method, url, params):
     data = {
         "id": "5f3aa16af331a53956b9b290",
-        "checkItemStates": null,
-        "closed": false,
+        "checkItemStates": "TestStatus",
+        "closed": "false",
         "dateLastActivity": "2020-08-18T12:34:10.753Z",
         "desc": "",
-        "descData": null,
-        "dueReminder": null,
+        "descData": "null",
+        "dueReminder": "null",
         "idBoard": "5f3a9a92b421455eaa2ca174",
         "idList": "5f3a9d90546f2731c72baf4c",
         "idMembersVoted": [],
         "idShort": 1,
-        "idAttachmentCover": null,
+        "idAttachmentCover": "null",
         "idLabels": [],
-        "manualCoverAttachment": false,
+        "manualCoverAttachment": "false",
         "name": "MadhuCard1",
         "pos": 16384,
         "shortLink": "kZtTeD26",
-        "isTemplate": false,
+        "isTemplate": "false",
         "badges": {
             "attachmentsByType": {
                 "trello": {
@@ -51,34 +51,34 @@ def mock_get_cards(url, params):
                     "card": 0
                 }
             },
-            "location": false,
+            "location": "false",
             "votes": 0,
-            "viewingMemberVoted": false,
-            "subscribed": false,
+            "viewingMemberVoted": "false",
+            "subscribed": "false",
             "fogbugz": "",
             "checkItems": 0,
             "checkItemsChecked": 0,
-            "checkItemsEarliestDue": null,
+            "checkItemsEarliestDue": "null",
             "comments": 0,
             "attachments": 0,
-            "description": false,
-            "due": null,
-            "dueComplete": false,
-            "start": null
+            "description": "false",
+            "due": "null",
+            "dueComplete": "false",
+            "start": "null"
         },
-        "dueComplete": false,
-        "due": null,
+        "dueComplete": "false",
+        "due": "null",
         "idChecklists": [],
         "idMembers": [],
         "labels": [],
         "shortUrl": "https://trello.com/c/kZtTeD26",
-        "start": null,
-        "subscribed": false,
+        "start": "null",
+        "subscribed": "false",
         "url": "https://trello.com/c/kZtTeD26/1-madhucard1",
         "cover": {
-            "idAttachment": null,
-            "color": null,
-            "idUploadedBackground": null,
+            "idAttachment": "null",
+            "color": "null",
+            "idUploadedBackground": "null",
             "size": "normal",
             "brightness": "light"
         }
@@ -87,10 +87,10 @@ def mock_get_cards(url, params):
     list = {
         "id": "5f3a9d90546f2731c72baf4c",
         "name": "MadhuList",
-        "closed": false,
+        "closed": "false",
         "pos": 8192,
-        "softLimit": null,
-        "creationMethod": null,
+        "softLimit": "null",
+        "creationMethod": "null",
         "idBoard": "5f3a9a92b421455eaa2ca174",
         "limits": {
             "cards": {
@@ -106,7 +106,7 @@ def mock_get_cards(url, params):
                 }
             }
         },
-        "subscribed": false
+        "subscribed": "false"
     }
 
     if url == f'https://api.trello.com/1/boards/board1234/cards':
@@ -114,7 +114,7 @@ def mock_get_cards(url, params):
         # sample_trello_lists_response should point to some test response data
         response.json.return_value = data
         return response
-    if url == f'https://api.trello.com/1/cards/5f3aa16af331a53956b9b290/list':
+    if url == f'https://api.trello.com/1/cards/1/list':
         response = Mock()
         # sample_trello_lists_response should point to some test response data
         response.json.return_value = list
