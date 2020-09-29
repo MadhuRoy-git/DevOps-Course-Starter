@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for
 import trello_items as trello
 from viewmodel import ViewModel
+from app_config import Config
 
 def create_app():
     app = Flask(__name__) 
-    app.config.from_object('app_config.Config')
+    app.config.from_object(Config())
     
-
     @app.route('/')
     def index():
         items = trello.get_items()
@@ -36,3 +36,5 @@ def create_app():
         return redirect(url_for('index'))
 
     return app
+
+app = create_app()

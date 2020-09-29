@@ -1,10 +1,11 @@
 import requests
 import os
 from card import Card
+from flask import current_app as app
 
-key = os.getenv('apiKey')
-token = os.getenv('apiToken')
-board_id = os.getenv('boardId')
+key = os.getenv('key')
+token = os.getenv('token')
+boardid = os.getenv('boardid')
 
 TODO_LIST_ID = '5f3a9a92b421455eaa2ca175'
 DOING_LIST_ID = '5f3a9a92b421455eaa2ca176'
@@ -20,7 +21,7 @@ def get_items():
     todo_cards = []
     doing_cards = []
     done_cards = []
-    cards = get_cards_from_board(board_id)
+    cards = get_cards_from_board(boardid)
     for card in cards :
         list_name = get_list_name(card['id'])
         new_card = Card(card['id'], card['name'], card['desc'], list_name, card['dateLastActivity'])
@@ -76,7 +77,7 @@ def create_item(title, description):
         'token': token,
         'name': title, 
         'desc': description,
-        'pos': len(get_cards_from_board(board_id)) + 1, 
+        'pos': len(get_cards_from_board(boardid)) + 1, 
         'idList': TODO_LIST_ID
     }
     card = requests.request("POST", url, params=query)
