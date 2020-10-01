@@ -3,6 +3,7 @@ import os
 from threading import Thread
 import requests
 import time
+import trello_items as trello
 from app import create_app
 from flask import current_app as app
 from dotenv import load_dotenv, find_dotenv
@@ -13,12 +14,12 @@ def test_app():
     # Create the new board & update the board id environment variable
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
+    
+    board_id = create_trello_board('My E2E Test Board')
+    update_env_vars(board_id)
 
     # construct the new application
     application = create_app()
-    board_id = create_trello_board('My E2E Test Board')
-    print("board_id =", board_id)
-    os.environ['boardId'] = board_id
     
     # start the app in its own thread.
     thread = Thread(target=lambda: application.run(use_reloader=False)) 
@@ -33,6 +34,17 @@ def test_app():
 def driver():
     with webdriver.Firefox() as driver:
         yield driver
+
+def update_env_vars(board_id):
+    os.environ['boardId'] = board_id
+    lists = trello.get_all_lists_on_board(board_id)
+    for list in lists:
+        if list['name'] == 'To Do':
+            os.environ['TODO_LIST_ID'] = list['id']
+        elif list['name'] == 'Doing':
+            os.environ['DOING_LIST_ID'] = list['id']
+        else:
+            os.environ['DONE_LIST_ID'] = list['id']
 
 def test_task_journey(driver, test_app): 
     driver.get('http://127.0.0.1:5000/')
@@ -59,6 +71,12 @@ def test_task_journey(driver, test_app):
     time.sleep(2)
     assert driver.find_element_by_xpath("//td[2]").text == "Movie on TV"
     assert driver.find_element_by_xpath("//td[4]").text == "Done"
+
+    #Undo item
+    driver.find_element_by_id("undo-btn").click()
+    time.sleep(2)
+    assert driver.find_element_by_xpath("//td[2]").text == "Movie on TV"
+    assert driver.find_element_by_xpath("//td[4]").text == "To Do"
 
 
 def create_trello_board(name):

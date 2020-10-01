@@ -3,11 +3,6 @@ import os
 from card import Card
 from flask import current_app as app
 
-TODO_LIST_ID = '5f3a9a92b421455eaa2ca175'
-DOING_LIST_ID = '5f3a9a92b421455eaa2ca176'
-DONE_LIST_ID = '5f3a9a92b421455eaa2ca177'
-
-
 def get_items():
     """
     Fetches all cards from our Trello board.
@@ -65,6 +60,21 @@ def get_list_name(card_id):
     list = requests.request("GET", url, params=query)
     return list.json()['name']
 
+def get_all_lists_on_board(board_id):
+    """
+    Fetches all lists from a Trello board.
+    Returns:
+        list: The lists on the boards
+    """
+    key = os.getenv('apiKey')
+    token = os.getenv('apiToken')
+    url = "https://api.trello.com/1/boards/{}/lists".format(board_id)
+    query = {
+        'key': key,
+        'token': token
+    }
+    return requests.request("GET", url, params=query).json()
+
 
 def create_item(title, description):
     """
@@ -82,7 +92,7 @@ def create_item(title, description):
         'name': title, 
         'desc': description,
         'pos': len(get_cards_from_board(boardid)) + 1, 
-        'idList': TODO_LIST_ID
+        'idList': app.config['TODOLISTID']
     }
     card = requests.request("POST", url, params=query)
     return card
@@ -98,7 +108,7 @@ def complete_item(item_id):
     query = {
         'key': key,
         'token': token,
-        'idList': DONE_LIST_ID
+        'idList': app.config['DONELISTID']
     }
     requests.request("PUT", url, params=query)
 
@@ -112,7 +122,7 @@ def start_item(item_id):
     query = {
         'key': key,
         'token': token,
-        'idList': DOING_LIST_ID
+        'idList': app.config['DOINGLISTID']
     }
     requests.request("PUT", url, params=query)
 
@@ -127,6 +137,6 @@ def undo_item(item_id):
     query = {
         'key': key,
         'token': token,
-        'idList': TODO_LIST_ID
+        'idList': app.config['TODOLISTID']
     }
     requests.request("PUT", url, params=query)
