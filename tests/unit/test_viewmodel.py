@@ -6,11 +6,11 @@ from card import Card
 
 vm = ViewModel(["my todo items"], ["my doing items"], ["my done items"])
 last_modified = '2020-09-20 11:18:26.051811'
-today_mock = '2020-09-30 00:16:26.061713'
+today_mock = '2020-10-01 00:16:26.061713'
 future_date = '2020-10-25 00:16:26.061713'
 
 card1 = Card("1", "card1", "description1", "done", "2020-09-01 12:16:26.061713")
-card2 = Card("2", "card2", "description2", "donerecent", "2020-09-30 11:16:26.061713")
+card2 = Card("2", "card2", "description2", "donerecent", "2020-10-01 11:16:26.061713")
 card3 = Card("3", "card3", "description3", "done", "2020-09-02 12:16:26.061713")
 items = [card1, card2, card3]
 
