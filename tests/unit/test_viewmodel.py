@@ -1,17 +1,19 @@
 from viewmodel import ViewModel
 import pytest
-from datetime import datetime
+from datetime import timedelta, date, datetime
 import dateutil.parser
 from card import Card
 
 vm = ViewModel(["my todo items"], ["my doing items"], ["my done items"])
-last_modified = '2020-09-20 11:18:26.051811'
-today_mock = '2020-10-01 00:16:26.061713'
-future_date = '2020-10-25 00:16:26.061713'
+last_modified_date = date.today() - timedelta(days=10)
+last_modified = last_modified_date.strftime("%Y-%m-%d %H:%M:%S")
+today_mock = date.today().strftime("%Y-%m-%d %H:%M:%S")
+future = date.today() + timedelta(days=10)
+future_date = future.strftime("%Y-%m-%d %H:%M:%S")
 
-card1 = Card("1", "card1", "description1", "done", "2020-09-01 12:16:26.061713")
-card2 = Card("2", "card2", "description2", "donerecent", "2020-10-01 11:16:26.061713")
-card3 = Card("3", "card3", "description3", "done", "2020-09-02 12:16:26.061713")
+card1 = Card("1", "card1", "description1", "done", last_modified)
+card2 = Card("2", "card2", "description2", "donerecent", today_mock)
+card3 = Card("3", "card3", "description3", "done", last_modified)
 items = [card1, card2, card3]
 
 def test_todo_items():

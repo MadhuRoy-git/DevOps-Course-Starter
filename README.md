@@ -40,3 +40,8 @@ The `.env` file is used by flask to set environment variables when running `flas
 * The list ids for "To Do" and "Done" are hard-coded in the trello_item.py. They are retrieved by a Get call to the Trello API.
 
 When running `setup.sh`, the `.env.template` file will be copied to `.env` if the latter does not exist.
+
+### Tests
+There are 3 types of tests that have been added - Unit Tests , Integration Tests and EndToEnd Tests.
+They can be run by the following command : python -m pytest
+For the end to end tests , install the latest version of Firefox browser and geckodriver.

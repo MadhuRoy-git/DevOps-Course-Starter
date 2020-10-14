@@ -2,7 +2,6 @@ import pytest
 import os
 from threading import Thread
 import requests
-import time
 import trello_items as trello
 from app import create_app
 from flask import current_app as app
@@ -55,28 +54,28 @@ def test_task_journey(driver, test_app):
     driver.find_element_by_id("name_input").send_keys("Watch movie")
     driver.find_element_by_id("desc_input").send_keys("Movie on TV")
     driver.find_element_by_id("add-item").click()
-    time.sleep(2)
+    driver.implicitly_wait(2)
     els = driver.find_elements_by_tag_name("td")
-    assert driver.find_element_by_xpath("//td[2]").text == "Movie on TV"
-    assert driver.find_element_by_xpath("//td[4]").text == "To Do"
+    assert driver.find_element_by_id("todoname").text == "Movie on TV"
+    assert driver.find_element_by_id("tododesc").text == "To Do"
 
     #Start item
     driver.find_element_by_id("start-btn").click()
-    time.sleep(2)
-    assert driver.find_element_by_xpath("//td[2]").text == "Movie on TV"
-    assert driver.find_element_by_xpath("//td[4]").text == "Doing"
+    driver.implicitly_wait(2)
+    assert driver.find_element_by_id("doingname").text == "Movie on TV"
+    assert driver.find_element_by_id("doingdesc").text == "Doing"
 
     #Complete item
     driver.find_element_by_id("complete-btn").click()
-    time.sleep(2)
-    assert driver.find_element_by_xpath("//td[2]").text == "Movie on TV"
-    assert driver.find_element_by_xpath("//td[4]").text == "Done"
+    driver.implicitly_wait(2)
+    assert driver.find_element_by_id("donename").text == "Movie on TV"
+    assert driver.find_element_by_id("donedesc").text == "Done"
 
     #Undo item
     driver.find_element_by_id("undo-btn").click()
-    time.sleep(2)
-    assert driver.find_element_by_xpath("//td[2]").text == "Movie on TV"
-    assert driver.find_element_by_xpath("//td[4]").text == "To Do"
+    driver.implicitly_wait(2)
+    assert driver.find_element_by_id("todoname").text == "Movie on TV"
+    assert driver.find_element_by_id("tododesc").text == "To Do"
 
 
 def create_trello_board(name):

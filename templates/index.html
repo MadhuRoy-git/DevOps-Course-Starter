@@ -17,9 +17,9 @@
     {% for item in view_model.todo_items %}
       <tr>
         <td></td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.status }}</td>
-        <td>{{ item.description }}</td>
+        <td id ="todoname">{{ item.name }}</td>
+        <td id ="todostatus">{{ item.status }}</td>
+        <td id ="tododesc">{{ item.description }}</td>
         <td>
           <form action="start/{{ item.id }}" method="post">
             <button class="btn btn-outline-primary" type="submit" id="start-btn">Start</button>
@@ -42,9 +42,9 @@
     {% for item in view_model.doing_items %}
       <tr>
         <td></td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.status }}</td>
-        <td>{{ item.description }}</td>
+        <td id ="doingname">{{ item.name }}</td>
+        <td id ="doingstatus">{{ item.status }}</td>
+        <td id ="doingdesc">{{ item.description }}</td>
         <td>
           <form action="complete/{{ item.id }}" method="post">
             <button class="btn btn-outline-primary" type="submit" id="complete-btn">Complete</button>
@@ -68,9 +68,9 @@
       {% for item in view_model.done_items %}
         <tr>
           <td></td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.status }}</td>
-          <td>{{ item.description }}</td>
+          <td id ="donename">{{ item.name }}</td>
+          <td id ="donestatus">{{ item.status }}</td>
+          <td id ="donedesc">{{ item.description }}</td>
           <td>
             <form action="undo/{{ item.id }}" method="post">
               <button class="btn btn-outline-primary" type="submit" id="undo-btn">Undo</button>
