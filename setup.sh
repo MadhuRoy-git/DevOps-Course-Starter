@@ -15,8 +15,8 @@ if [ $Windows == 1 ]
 fi
 
 # Upgrade pip and install required packages
-pip install --upgrade pip
-pip install -r requirements.txt
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
 
 # Create a .env file from the .env.template
 cp -n .env.template .env
