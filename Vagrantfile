@@ -76,7 +76,7 @@ Vagrant.configure("2") do |config|
   echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
   echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
   echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
-  curl -sSL https://raw.githubusercontent.com/python-poetry/ poetry/master/get-poetry.py | python
+  curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
   exec "$SHELL"
   SHELL
 end
