@@ -76,9 +76,10 @@ Vagrant.configure("2") do |config|
     # To get rid of warning saying that pyenv is already installed
 		# sudo rm -rf ~/.pyenv
     git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-    echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
+    echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.profile
+    source ~/.profile
     pyenv install 3.8.4
 		pyenv global 3.8.4
     curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
