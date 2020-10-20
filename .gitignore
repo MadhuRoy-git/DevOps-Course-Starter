@@ -122,3 +122,6 @@ geckodriver.log
 ### Vagrant folder ###
 .vagrant
 
+### venv folder ###
+.venv
+

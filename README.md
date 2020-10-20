@@ -6,16 +6,15 @@ The project uses a virtual environment to isolate package dependencies. To creat
 
 ### On macOS and Linux
 ```bash
-$ source setup.sh
+$ poetry install
 ```
-### On Windows (Using Git Bash)
-```bash
-$ source setup.sh --windows
-```
+You'll also need to clone a new .env file from the .env.tempalate to store local configuration options. This is a one-time operation on first setup:
 
-Once the setup script has completed and all packages have been installed, start the Flask app by running:
+$ cp .env.template .env  # (first time only)
+
+Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
 ```bash
-$ flask run
+$ poetry run flask run
 ```
 
 You should see output similar to the following:
