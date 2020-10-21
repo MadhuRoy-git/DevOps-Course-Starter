@@ -83,10 +83,10 @@ Vagrant.configure("2") do |config|
     pyenv install 3.8.4
 		pyenv global 3.8.4
     curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-    cp .env.template .env
     exec "$SHELL"
   SHELL
 
+  config.vm.network "forwarded_port", guest: 5000, host: 5000
   config.trigger.after :up do |trigger|
     trigger.name = "Launching App"
     trigger.info = "Running the TODO app setup script" 
@@ -94,7 +94,8 @@ Vagrant.configure("2") do |config|
       # install dependencies and launch
       cd /vagrant
       poetry install
-      poetry run flask run 
+      poetry run flask run --host=0.0.0.0
     "}
   end
+
 end
