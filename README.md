@@ -17,6 +17,11 @@ Once the all dependencies have been installed, start the Flask app in developmen
 $ poetry run flask run
 ```
 
+We can run the application in a VM using Vagrant within the poetry environment by running:
+```bash
+$ vagrant up --provision
+```
+
 You should see output similar to the following:
 ```bash
  * Serving Flask app "app" (lazy loading)

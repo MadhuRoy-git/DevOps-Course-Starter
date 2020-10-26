@@ -125,3 +125,6 @@ geckodriver.log
 ### venv folder ###
 .venv
 
+### Log files ###
+logs.txt
+
