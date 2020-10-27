@@ -118,3 +118,13 @@ env/
 ### Geckodriver files ###
 geckodriver
 geckodriver.log
+
+### Vagrant folder ###
+.vagrant
+
+### venv folder ###
+.venv
+
+### Log files ###
+logs.txt
+
