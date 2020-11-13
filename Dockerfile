@@ -4,4 +4,4 @@ EXPOSE 5000
 WORKDIR /DevOps-Course-Starter
 COPY . /DevOps-Course-Starter/
 RUN poetry install
-ENTRYPOINT poetry run flask run -h 127.0.0.1 -p 5000
+ENTRYPOINT poetry run flask run -h 0.0.0.0 -p 5000
