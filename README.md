@@ -1,20 +1,38 @@
 # DevOps Apprenticeship: Project Exercise
 
-## Getting started
+## Initial Setup
 
-The project uses a virtual environment to isolate package dependencies. To create the virtual environment and install required packages, run the following from a bash shell terminal:
+A file called .env has been created with the environment variables below. This .env file is used by flask to set environment variables. This enables things like development mode (which also enables features like hot reloading when you make a file change). Populate the following variables inside the .env file with your Trello App API details/credentials:
 
-### On macOS and Linux
 ```bash
-$ poetry install
+FLASK_APP=app
+FLASK_ENV=development
+
+apiKey=# your trello api key
+apiToken=# your trello api token
+boardId=# your board id
+
+TODO_LIST_ID=# your 'todo' list id
+DOING_LIST_ID=# your 'doing' list id
+DONE_LIST_ID=# your 'done' list id
 ```
-You'll also need to clone a new .env file from the .env.tempalate to store local configuration options. This is a one-time operation on first setup:
+Note that .env has been added to the gitignore file so that these secrets will not be commited to git. Now, our app is ready to be run.
 
-$ cp .env.template .env  # (first time only)
-
-Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
+### Running the App
 ```bash
-$ poetry run flask run
+$ poetry run python -m pytest
+```
+
+To build a docker image (in Development mode) and start the application in Development mode , run the following:
+```bash
+$ docker build --target development --tag todo-app:dev .
+$ docker run -d -p 5000:5000 --env-file ./.env todo-app:dev 
+```
+
+To build a docker image (in Production mode) and start the application in Development mode , run the following:
+```bash
+$ docker build --target production --tag todo-app:prod .
+$ docker run -d -p 5000:5000 --env-file ./.env todo-app:prod 
 ```
 
 We can run the application in a VM using Vagrant within the poetry environment by running:
@@ -27,23 +45,12 @@ You should see output similar to the following:
  * Serving Flask app "app" (lazy loading)
  * Environment: development
  * Debug mode: on
- * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+ * Running on http://0.0.0.1:5000/ (Press CTRL+C to quit)
  * Restarting with fsevents reloader
  * Debugger is active!
  * Debugger PIN: 226-556-590
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
-
-### Notes
-
-A Trello Account has been setup.
-The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like developement mode (which also enables features like hot reloading when you make a file change).
-* There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
-* The .env file has the API Key and Token that have been created for the Trello Account.
-* The .env file also has the boardId for the board on the Trello Account
-* The list ids for "To Do" and "Done" are hard-coded in the trello_item.py. They are retrieved by a Get call to the Trello API.
-
-When running `setup.sh`, the `.env.template` file will be copied to `.env` if the latter does not exist.
 
 ### Tests
 There are 3 types of tests that have been added - Unit Tests , Integration Tests and EndToEnd Tests.

@@ -5,7 +5,7 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 EXPOSE 5000
 WORKDIR /DevOps-Course-Starter
 COPY . /DevOps-Course-Starter/
-RUN poetry install
+RUN poetry install && poetry add gunicorn
 
 FROM base as development
 ENTRYPOINT poetry run flask run -h 0.0.0.0 -p 5000

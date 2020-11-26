@@ -1,2 +1,9 @@
 .env
 .env.template
+Vagrantfile
+README.md
+geckodriver
+geckodriver.log
+.gitignore
+tests
+Dockerfile*
