@@ -31,7 +31,7 @@ $ docker run -d -p 5000:5000 --env-file ./.env todo-app:dev
 
 To run the docker container with a bind mount so we can change the Python files which will directly reflect without rebuilding the image / rerunning the container , we need to run with the following command :
 ```bash
-docker run --env-file ./.env -p 5000:5000 --mount type=bind,source="$(pwd)",target=/app/todo_app todo-app:dev
+docker run --env-file ./.env -p 5000:5000 --mount type=bind,source="$(pwd)",target=/DevOps-Course-Starter todo-app:dev
 ```
 
 To build a docker image (in Production mode) and start the application in Development mode , run the following:
