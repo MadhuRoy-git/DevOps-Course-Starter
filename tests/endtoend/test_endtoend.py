@@ -29,10 +29,20 @@ def test_app():
     thread.join(1) 
     delete_trello_board(board_id)
 
-@pytest.fixture(scope='module')
+# THIS IS USED TO RUN THE E2E TESTS IN DOCKER CONTAINER
+@pytest.fixture(scope='module') 
 def driver():
-    with webdriver.Firefox() as driver:
+    opts = webdriver.ChromeOptions()
+    opts.add_argument('--headless') 
+    opts.add_argument('--no-sandbox') 
+    with webdriver.Chrome('./chromedriver', options=opts) as driver:
         yield driver
+
+# UNCOMMENT THIS TO RUN THE E2E TESTS LOCALLY - COMMENT THE ABOVE
+# @pytest.fixture(scope='module') 
+# def driver():
+#     with webdriver.Firefox() as driver:
+#         yield driver
 
 def update_env_vars(board_id):
     os.environ['boardId'] = board_id
@@ -56,26 +66,30 @@ def test_task_journey(driver, test_app):
     driver.find_element_by_id("add-item").click()
     driver.implicitly_wait(2)
     els = driver.find_elements_by_tag_name("td")
-    assert driver.find_element_by_id("todoname").text == "Movie on TV"
-    assert driver.find_element_by_id("tododesc").text == "To Do"
+    assert driver.find_element_by_id("todoname").text == "Watch movie"
+    assert driver.find_element_by_id("tododesc").text == "Movie on TV"
+    assert driver.find_element_by_id("todostatus").text == "To Do"
 
     #Start item
     driver.find_element_by_id("start-btn").click()
     driver.implicitly_wait(2)
-    assert driver.find_element_by_id("doingname").text == "Movie on TV"
-    assert driver.find_element_by_id("doingdesc").text == "Doing"
+    assert driver.find_element_by_id("doingname").text == "Watch movie"
+    assert driver.find_element_by_id("doingdesc").text == "Movie on TV"
+    assert driver.find_element_by_id("doingstatus").text == "Doing"
 
     #Complete item
     driver.find_element_by_id("complete-btn").click()
     driver.implicitly_wait(2)
-    assert driver.find_element_by_id("donename").text == "Movie on TV"
-    assert driver.find_element_by_id("donedesc").text == "Done"
+    assert driver.find_element_by_id("donename").text == "Watch movie"
+    assert driver.find_element_by_id("donedesc").text == "Movie on TV"
+    assert driver.find_element_by_id("donestatus").text == "Done"
 
     #Undo item
     driver.find_element_by_id("undo-btn").click()
     driver.implicitly_wait(2)
-    assert driver.find_element_by_id("todoname").text == "Movie on TV"
-    assert driver.find_element_by_id("tododesc").text == "To Do"
+    assert driver.find_element_by_id("todoname").text == "Watch movie"
+    assert driver.find_element_by_id("tododesc").text == "Movie on TV"
+    assert driver.find_element_by_id("todostatus").text == "To Do"
 
 
 def create_trello_board(name):
