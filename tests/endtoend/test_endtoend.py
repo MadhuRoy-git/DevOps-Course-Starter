@@ -105,7 +105,6 @@ def create_trello_board(name):
         'name': name
     }
     response = requests.request("POST", url, params=query)
-    print("board_id in create trello board function =", response.json()['id'])
     return response.json()['id']
 
 
