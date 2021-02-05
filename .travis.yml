@@ -2,4 +2,4 @@ script:
     - docker build --target test --tag my-test-image .
     - docker run my-test-image tests/unit
     - docker run my-test-image tests/integration
-    - docker run my-test-image tests/endtoend --env apiKey --env apiToken --env boardId --env TODO_LIST_ID --env DOING_LIST_ID --env DONE_LIST_ID --env FLASK_APP --env FLASK_ENV
+    - docker run --env apiKey --env apiToken --env boardId --env TODO_LIST_ID --env DOING_LIST_ID --env DONE_LIST_ID --env FLASK_APP --env FLASK_ENV my-test-image tests/endtoend
