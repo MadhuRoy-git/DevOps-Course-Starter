@@ -94,7 +94,7 @@ def test_task_journey(driver, test_app):
 
 def create_trello_board(name):
     """
-    Creates a new board with given name.
+    Creates a new board with given name. 
     Returns:
         The id of the newly created board.
     """
