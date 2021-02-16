@@ -59,9 +59,9 @@ def test_task_journey(driver, test_app):
     driver.get('http://127.0.0.1:5000/')
     assert driver.title == 'To-Do App'
 
-    todo_name = driver.find_element_by_id("todoname").text
-    todo_desc = driver.find_element_by_id("tododesc").text
-    todo_status = driver.find_element_by_id("todostatus").text
+    todo_name = driver.find_element_by_id("todoname")
+    todo_desc = driver.find_element_by_id("tododesc")
+    todo_status = driver.find_element_by_id("todostatus")
 
     # Create new item
     els = driver.find_elements_by_tag_name("td")
@@ -70,9 +70,9 @@ def test_task_journey(driver, test_app):
     driver.find_element_by_id("add-item").click()
     driver.implicitly_wait(2)
     els = driver.find_elements_by_tag_name("td")
-    assert todo_name == "Watch movie"
-    assert todo_desc == "Movie on TV"
-    assert todo_status == "To Do"
+    assert todo_name.text == "Watch movie"
+    assert todo_desc.text == "Movie on TV"
+    assert todo_status.text == "To Do"
 
     #Start item
     driver.find_element_by_id("start-btn").click()
@@ -91,9 +91,9 @@ def test_task_journey(driver, test_app):
     #Undo item
     driver.find_element_by_id("undo-btn").click()
     driver.implicitly_wait(2)
-    assert todo_name == "Watch movie"
-    assert todo_desc == "Movie on TV"
-    assert todo_status == "To Do"
+    assert todo_name.text == "Watch movie"
+    assert todo_desc.text == "Movie on TV"
+    assert todo_status.text == "To Do"
 
 
 def create_trello_board(name):
