@@ -29,10 +29,20 @@ def test_app():
     thread.join(1) 
     delete_trello_board(board_id)
 
-@pytest.fixture(scope='module')
+# THIS IS USED TO RUN THE E2E TESTS IN DOCKER CONTAINER
+@pytest.fixture(scope='module') 
 def driver():
-    with webdriver.Firefox() as driver:
+    opts = webdriver.ChromeOptions()
+    opts.add_argument('--headless') 
+    opts.add_argument('--no-sandbox') 
+    with webdriver.Chrome('./chromedriver', options=opts) as driver:
         yield driver
+
+# UNCOMMENT THIS TO RUN THE E2E TESTS LOCALLY - COMMENT THE ABOVE
+# @pytest.fixture(scope='module') 
+# def driver():
+#     with webdriver.Firefox() as driver:
+#         yield driver
 
 def update_env_vars(board_id):
     os.environ['boardId'] = board_id
@@ -49,33 +59,40 @@ def test_task_journey(driver, test_app):
     driver.get('http://127.0.0.1:5000/')
     assert driver.title == 'To-Do App'
 
+    todo_title = "Watch movie"
+    todo_desc = "Movie on TV"
+
     # Create new item
     els = driver.find_elements_by_tag_name("td")
-    driver.find_element_by_id("name_input").send_keys("Watch movie")
-    driver.find_element_by_id("desc_input").send_keys("Movie on TV")
+    driver.find_element_by_id("name_input").send_keys(todo_title)
+    driver.find_element_by_id("desc_input").send_keys(todo_desc)
     driver.find_element_by_id("add-item").click()
     driver.implicitly_wait(2)
     els = driver.find_elements_by_tag_name("td")
-    assert driver.find_element_by_id("todoname").text == "Movie on TV"
-    assert driver.find_element_by_id("tododesc").text == "To Do"
+    assert driver.find_element_by_id("todoname").text == todo_title
+    assert driver.find_element_by_id("tododesc").text == todo_desc
+    assert driver.find_element_by_id("todostatus").text == "To Do"
 
     #Start item
     driver.find_element_by_id("start-btn").click()
     driver.implicitly_wait(2)
-    assert driver.find_element_by_id("doingname").text == "Movie on TV"
-    assert driver.find_element_by_id("doingdesc").text == "Doing"
+    assert driver.find_element_by_id("doingname").text == todo_title
+    assert driver.find_element_by_id("doingdesc").text == todo_desc
+    assert driver.find_element_by_id("doingstatus").text == "Doing"
 
     #Complete item
     driver.find_element_by_id("complete-btn").click()
     driver.implicitly_wait(2)
-    assert driver.find_element_by_id("donename").text == "Movie on TV"
-    assert driver.find_element_by_id("donedesc").text == "Done"
+    assert driver.find_element_by_id("donename").text == todo_title
+    assert driver.find_element_by_id("donedesc").text == todo_desc
+    assert driver.find_element_by_id("donestatus").text == "Done"
 
     #Undo item
     driver.find_element_by_id("undo-btn").click()
     driver.implicitly_wait(2)
-    assert driver.find_element_by_id("todoname").text == "Movie on TV"
-    assert driver.find_element_by_id("tododesc").text == "To Do"
+    assert driver.find_element_by_id("todoname").text == todo_title
+    assert driver.find_element_by_id("tododesc").text == todo_desc
+    assert driver.find_element_by_id("todostatus").text == "To Do"
 
 
 def create_trello_board(name):
@@ -91,7 +108,6 @@ def create_trello_board(name):
         'name': name
     }
     response = requests.request("POST", url, params=query)
-    print("board_id in create trello board function =", response.json()['id'])
     return response.json()['id']
 
 

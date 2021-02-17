@@ -61,3 +61,17 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 There are 3 types of tests that have been added - Unit Tests , Integration Tests and EndToEnd Tests.
 They can be run by the following command : python -m pytest
 For the end to end tests , install the latest version of Firefox browser and geckodriver.
+
+### Running the Tests via docker
+
+### Build the docker image for tests
+docker build --target test --tag my-test-image .
+
+### Running the Unit Tests via docker
+docker run my-test-image tests/unit
+
+### Running the Integration Tests via docker
+docker run my-test-image tests/integration
+
+### Running the E2E Tests via docker , the environment variables need to be passed by the .env file
+docker run --env-file .env my-test-image tests/endtoend
