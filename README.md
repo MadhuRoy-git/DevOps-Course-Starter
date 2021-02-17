@@ -73,5 +73,5 @@ docker run my-test-image tests/unit
 ### Running the Integration Tests via docker
 docker run my-test-image tests/integration
 
-### Running the E2E Tests via docker , the environment variables need to be passed
-docker run --env apiKey --env apiToken --env boardId --env TODO_LIST_ID --env DOING_LIST_ID --env DONE_LIST_ID --env FLASK_APP --env FLASK_ENV my-test-image tests/endtoend
+### Running the E2E Tests via docker , the environment variables need to be passed by the .env file
+docker run --env-file .env my-test-image tests/endtoend

@@ -59,36 +59,39 @@ def test_task_journey(driver, test_app):
     driver.get('http://127.0.0.1:5000/')
     assert driver.title == 'To-Do App'
 
+    todo_title = "Watch movie"
+    todo_desc = "Movie on TV"
+
     # Create new item
     els = driver.find_elements_by_tag_name("td")
-    driver.find_element_by_id("name_input").send_keys("Watch movie")
-    driver.find_element_by_id("desc_input").send_keys("Movie on TV")
+    driver.find_element_by_id("name_input").send_keys(todo_title)
+    driver.find_element_by_id("desc_input").send_keys(todo_desc)
     driver.find_element_by_id("add-item").click()
     driver.implicitly_wait(2)
     els = driver.find_elements_by_tag_name("td")
-    assert driver.find_element_by_id("todoname").text == "Watch movie"
-    assert driver.find_element_by_id("tododesc").text == "Movie on TV"
+    assert driver.find_element_by_id("todoname").text == todo_title
+    assert driver.find_element_by_id("tododesc").text == todo_desc
     assert driver.find_element_by_id("todostatus").text == "To Do"
 
     #Start item
     driver.find_element_by_id("start-btn").click()
     driver.implicitly_wait(2)
-    assert driver.find_element_by_id("doingname").text == "Watch movie"
-    assert driver.find_element_by_id("doingdesc").text == "Movie on TV"
+    assert driver.find_element_by_id("doingname").text == todo_title
+    assert driver.find_element_by_id("doingdesc").text == todo_desc
     assert driver.find_element_by_id("doingstatus").text == "Doing"
 
     #Complete item
     driver.find_element_by_id("complete-btn").click()
     driver.implicitly_wait(2)
-    assert driver.find_element_by_id("donename").text == "Watch movie"
-    assert driver.find_element_by_id("donedesc").text == "Movie on TV"
+    assert driver.find_element_by_id("donename").text == todo_title
+    assert driver.find_element_by_id("donedesc").text == todo_desc
     assert driver.find_element_by_id("donestatus").text == "Done"
 
     #Undo item
     driver.find_element_by_id("undo-btn").click()
     driver.implicitly_wait(2)
-    assert driver.find_element_by_id("todoname").text == "Watch movie"
-    assert driver.find_element_by_id("tododesc").text == "Movie on TV"
+    assert driver.find_element_by_id("todoname").text == todo_title
+    assert driver.find_element_by_id("tododesc").text == todo_desc
     assert driver.find_element_by_id("todostatus").text == "To Do"
 
 
