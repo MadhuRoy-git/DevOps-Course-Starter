@@ -13,6 +13,12 @@ script:
     - docker push $DOCKER_USER/todo-app:latest
     # Get the latest image from Docker Hub (built by your CI pipeline) $ docker pull <user_name>/<image_name>
     # Tag it for Heroku
-    - docker tag $DOCKER_USER/todo-app:latest registry.heroku.com/madhutodo/web
+    - docker tag $DOCKER_USER/todo-app:latest registry.heroku.com/$HEROKU_APP/web
     # Push it to Heroku registry
-    - docker push registry.heroku.com/madhutodo/web
+    - docker push registry.heroku.com/$HEROKU_APP/web
+deploy:   
+    provider: script
+    script:    
+        - heroku container:release web --app $HEROKU_APP
+    on:  
+        branch: module_8
