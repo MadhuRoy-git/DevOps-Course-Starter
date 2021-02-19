@@ -1,3 +1,5 @@
+services:
+    - docker
 script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
     - docker build --target test --tag my-test-image .
