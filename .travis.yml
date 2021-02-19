@@ -6,3 +6,7 @@ script:
     - docker run --env apiKey --env apiToken --env boardId --env TODO_LIST_ID --env DOING_LIST_ID --env DONE_LIST_ID --env FLASK_APP --env FLASK_ENV my-test-image tests/endtoend
     - docker build --target production --tag $DOCKER_USER/todo-app:latest .  
     - docker push $DOCKER_USER/todo-app:latest
+branches:
+    only:
+        - gh-pages
+        - /.*/
