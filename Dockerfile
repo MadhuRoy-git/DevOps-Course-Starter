@@ -2,7 +2,6 @@ FROM python:3.8.4-buster as base
 ENV POETRY_HOME=/poetry
 ENV PATH=${POETRY_HOME}/bin:${PATH}
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-EXPOSE 5000
 WORKDIR /DevOps-Course-Starter
 COPY . /DevOps-Course-Starter
 
