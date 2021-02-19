@@ -113,7 +113,7 @@ def create_trello_board(name):
 
 def delete_trello_board(board_id):
     """
-    Deletes a board with given id. Returns nothing.
+    Deletes a board with given id. Returns nothing. 
     """
     url = "https://api.trello.com/1/boards/{}".format(board_id)
     query = {
