@@ -1,7 +1,7 @@
 services:
     - docker
 before_script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 script:
     - docker build --target test --tag my-test-image .
     - docker run my-test-image tests/unit
