@@ -17,7 +17,7 @@ ENV FLASK_ENV=production
 RUN poetry config virtualenvs.create false --local
 RUN poetry install
 RUN poetry add gunicorn
-ENTRYPOINT poetry run gunicorn "app:create_app()" --bind 0.0.0.0:5000
+ENTRYPOINT poetry run gunicorn "app:create_app()" --bind 0.0.0.0:${PORT}
 
 # testing stage FROM base as test
 FROM base as test
