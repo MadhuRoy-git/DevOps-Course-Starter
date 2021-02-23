@@ -19,7 +19,7 @@ ENV PORT=33507
 RUN poetry config virtualenvs.create false --local
 RUN poetry install
 RUN poetry add gunicorn
-ENTRYPOINT [ "poetry", "run", "gunicorn", "app:create_app()", "--bind 0.0.0.0:$PORT" ]
+ENTRYPOINT ["sh", "./scripts/entrypoint.sh"]
 
 # testing stage FROM base as test
 FROM base as test
