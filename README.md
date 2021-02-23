@@ -75,3 +75,6 @@ docker run my-test-image tests/integration
 
 ### Running the E2E Tests via docker , the environment variables need to be passed by the .env file
 docker run --env-file .env my-test-image tests/endtoend
+
+### Running the application on Heroku
+heroku open
