@@ -1,5 +1,23 @@
+services:
+    - docker
+before_script:
+    - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USER --password-stdin
+    - curl https://cli-assets.heroku.com/install.sh | sh  #install heroku
+    - docker login --username=$HEROKU_USER --password=$HEROKU_API_KEY registry.heroku.com
 script:
     - docker build --target test --tag my-test-image .
     - docker run my-test-image tests/unit
     - docker run my-test-image tests/integration
-    - docker run --env apiKey --env apiToken --env boardId --env TODO_LIST_ID --env DOING_LIST_ID --env DONE_LIST_ID --env FLASK_APP --env FLASK_ENV my-test-image tests/endtoend
+    - docker run --env apiKey --env apiToken --env boardId --env TODO_LIST_ID --env DOING_LIST_ID --env DONE_LIST_ID --env FLASK_ENV my-test-image tests/endtoend
+    - docker build --target production --tag $DOCKER_USER/todo-app:latest .  
+    - docker push $DOCKER_USER/todo-app:latest
+    # Tag it for Heroku
+    - docker tag $DOCKER_USER/todo-app:latest registry.heroku.com/$HEROKU_APP/web
+    # Push it to Heroku registry
+    - docker push registry.heroku.com/$HEROKU_APP/web
+deploy:   
+    provider: script
+    script:    
+        - heroku container:release web --app $HEROKU_APP
+    on:  
+        branch: master
