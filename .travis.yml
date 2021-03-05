@@ -1,7 +1,7 @@
 services:
     - docker
 before_script:
-    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
     - curl https://cli-assets.heroku.com/install.sh | sh  #install heroku
     - docker login --username=$HEROKU_USER --password=$HEROKU_API_KEY registry.heroku.com
 script:
@@ -11,7 +11,6 @@ script:
     - docker run --env apiKey --env apiToken --env boardId --env TODO_LIST_ID --env DOING_LIST_ID --env DONE_LIST_ID --env FLASK_ENV my-test-image tests/endtoend
     - docker build --target production --tag $DOCKER_USER/todo-app:latest .  
     - docker push $DOCKER_USER/todo-app:latest
-    # Get the latest image from Docker Hub (built by your CI pipeline) $ docker pull <user_name>/<image_name>
     # Tag it for Heroku
     - docker tag $DOCKER_USER/todo-app:latest registry.heroku.com/$HEROKU_APP/web
     # Push it to Heroku registry
