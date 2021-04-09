@@ -2,19 +2,19 @@
 
 ## Initial Setup
 
-A file called .env has been created with the environment variables below. This .env file is used by flask to set environment variables. This enables things like development mode (which also enables features like hot reloading when you make a file change). Populate the following variables inside the .env file with your Trello App API details/credentials:
+A file called .env has been created with the environment variables below. This .env file is used by flask to set environment variables. This enables things like development mode (which also enables features like hot reloading when you make a file change). Populate the following variables inside the .env file with your Mongo DB details/credentials:
 
 ```bash
 FLASK_APP=app
 FLASK_ENV=development
 
-apiKey=# your trello api key
-apiToken=# your trello api token
-boardId=# your board id
+BOARD_ID=# your board id
 
 TODO_LIST_ID=# your 'todo' list id
 DOING_LIST_ID=# your 'doing' list id
 DONE_LIST_ID=# your 'done' list id
+MONGO_USERNAME=# your Mongo DB user id
+MONGO_PASSWORD=# your Mongo DB password
 ```
 Note that .env has been added to the gitignore file so that these secrets will not be commited to git. Now, our app is ready to be run.
 
