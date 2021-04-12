@@ -49,11 +49,6 @@ def create_app():
         mongoDB.undo_item(collection, board_id, item_id)
         return redirect(url_for('index'))
 
-    @app.route('/stop/<item_id>', methods=['POST'])
-    def stop_item(item_id):
-        mongoDB.stop_item(collection, board_id, item_id)
-        return redirect(url_for('index'))
-
     return app
 
 app = create_app()
