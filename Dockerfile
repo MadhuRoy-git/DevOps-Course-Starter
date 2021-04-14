@@ -26,7 +26,7 @@ FROM base as test
 RUN poetry config virtualenvs.create false --local
 RUN poetry install
 # Install Chrome
-RUN curl -sSL https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-stable-89.0.4389.72-1.x86_64.rpm -o chrome.deb \
+RUN curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o chrome.deb \
     && apt-get update \
     && apt-get -f install ./chrome.deb -y \
     && rm ./chrome.deb
