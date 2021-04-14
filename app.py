@@ -49,6 +49,6 @@ def create_app():
         mongoDB.undo_item(collection, board_id, item_id)
         return redirect(url_for('index'))
 
-    return app
+    return app, collection
 
-app = create_app()
+app, collection = create_app()

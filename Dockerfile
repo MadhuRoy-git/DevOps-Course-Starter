@@ -31,9 +31,9 @@ RUN curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_am
     && apt-get -f install ./chrome.deb -y \
     && rm ./chrome.deb
 # Install Chromium WebDriver
-RUN LATEST=`curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE` \
+RUN LATEST=`curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE_89.0.4389` \
     && echo "Installing chromium webdriver version ${LATEST}" \
-    && curl -sSL https://chromedriver.storage.googleapis.com/${LATEST}/chromedriver_linux64.zip -o chromedriver_linux64.zip \
+    && curl -sSL https://chromedriver.storage.googleapis.com/89.0.4389.23/chromedriver_linux64.zip -o chromedriver_linux64.zip \
     && apt-get install unzip -y \
     && unzip ./chromedriver_linux64.zip
 ENV PYTHONPATH=.

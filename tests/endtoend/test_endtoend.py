@@ -2,7 +2,7 @@ import pytest
 import os
 from threading import Thread
 import requests
-import trello_items as trello
+import db_items as mongo
 from app import create_app
 from flask import current_app as app
 from dotenv import load_dotenv, find_dotenv
@@ -13,12 +13,14 @@ def test_app():
     # Create the new board & update the board id environment variable
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
-    
-    board_id = create_trello_board('My E2E Test Board')
-    update_env_vars(board_id)
+
+    # board_id = create_board('My E2E Test Board')
+    os.environ['BOARD_ID'] = 'test_board_id'
 
     # construct the new application
-    application = create_app()
+    application, collection = create_app() 
+    
+    create_board(collection)
     
     # start the app in its own thread.
     thread = Thread(target=lambda: application.run(use_reloader=False)) 
@@ -27,7 +29,7 @@ def test_app():
     yield app
     # Tear Down
     thread.join(1) 
-    delete_trello_board(board_id)
+    delete_board(collection)
 
 # THIS IS USED TO RUN THE E2E TESTS IN DOCKER CONTAINER
 @pytest.fixture(scope='module') 
@@ -44,19 +46,8 @@ def driver():
 #     with webdriver.Firefox() as driver:
 #         yield driver
 
-def update_env_vars(board_id):
-    os.environ['boardId'] = board_id
-    lists = trello.get_all_lists_on_board(board_id)
-    for list in lists:
-        if list['name'] == 'To Do':
-            os.environ['TODO_LIST_ID'] = list['id']
-        elif list['name'] == 'Doing':
-            os.environ['DOING_LIST_ID'] = list['id']
-        else:
-            os.environ['DONE_LIST_ID'] = list['id']
-
 def test_task_journey(driver, test_app): 
-    driver.get('http://127.0.0.1:5000/')
+    driver.get('http://0.0.0.0:5000/')
     assert driver.title == 'To-Do App'
 
     todo_title = "Watch movie"
@@ -71,21 +62,21 @@ def test_task_journey(driver, test_app):
     els = driver.find_elements_by_tag_name("td")
     assert driver.find_element_by_id("todoname").text == todo_title
     assert driver.find_element_by_id("tododesc").text == todo_desc
-    assert driver.find_element_by_id("todostatus").text == "To Do"
+    assert driver.find_element_by_id("todostatus").text == "todo"
 
     #Start item
     driver.find_element_by_id("start-btn").click()
     driver.implicitly_wait(2)
     assert driver.find_element_by_id("doingname").text == todo_title
     assert driver.find_element_by_id("doingdesc").text == todo_desc
-    assert driver.find_element_by_id("doingstatus").text == "Doing"
+    assert driver.find_element_by_id("doingstatus").text == "doing"
 
     #Complete item
     driver.find_element_by_id("complete-btn").click()
     driver.implicitly_wait(2)
     assert driver.find_element_by_id("donename").text == todo_title
     assert driver.find_element_by_id("donedesc").text == todo_desc
-    assert driver.find_element_by_id("donestatus").text == "Done"
+    assert driver.find_element_by_id("donestatus").text == "done"
 
     #Undo item
     driver.find_element_by_id("undo-btn").click()
@@ -94,30 +85,39 @@ def test_task_journey(driver, test_app):
     assert driver.find_element_by_id("tododesc").text == todo_desc
     assert driver.find_element_by_id("todostatus").text == "To Do"
 
+def create_board(collection):
+    """
+    Creates our initial collection with the 3 empty lists.
+    """
+    collection.insert_one(
+        {
+            'board_id': 'test_board_id',
+            'list_id': 'todo_list_id',
+            'list_name': 'todo',
+            'cards': []
+        }
+    )
+    collection.insert_one(
+        {
+            'board_id': 'test_board_id',
+            'list_id': 'doing_list_id',
+            'list_name': 'doing',
+            'cards': []
+        }
+    )
+    collection.insert_one(
+        {
+            'board_id': 'test_board_id',
+            'list_id': 'done_list_id',
+            'list_name': 'done',
+            'cards': []
+        }
+    )
 
-def create_trello_board(name):
-    """
-    Creates a new board with given name.
-    Returns:
-        The id of the newly created board.
-    """
-    url = "https://api.trello.com/1/boards"
-    query = {
-        'key': os.getenv('apiKey'),
-        'token': os.getenv('apiToken'),
-        'name': name
-    }
-    response = requests.request("POST", url, params=query)
-    return response.json()['id']
 
+def delete_board(collection):
+    """
+    Deletes the board at the end of the test.
+    """
+    collection.delete_many( { 'board_id': 'test_board_id' } )
 
-def delete_trello_board(board_id):
-    """
-    Deletes a board with given id. Returns nothing.
-    """
-    url = "https://api.trello.com/1/boards/{}".format(board_id)
-    query = {
-        'key': os.getenv('apiKey'),
-        'token': os.getenv('apiToken')
-    }
-    requests.request("DELETE", url, params=query)
