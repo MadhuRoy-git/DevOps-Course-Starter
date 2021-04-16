@@ -20,7 +20,7 @@ def test_app():
     # construct the new application
     application, collection = create_app() 
     
-    create_board(collection)
+    # create_board(collection)
     
     # start the app in its own thread.
     thread = Thread(target=lambda: application.run(use_reloader=False)) 
@@ -83,7 +83,7 @@ def test_task_journey(driver, test_app):
     driver.implicitly_wait(2)
     assert driver.find_element_by_id("todoname").text == todo_title
     assert driver.find_element_by_id("tododesc").text == todo_desc
-    assert driver.find_element_by_id("todostatus").text == "To Do"
+    assert driver.find_element_by_id("todostatus").text == "todo"
 
 def create_board(collection):
     """
