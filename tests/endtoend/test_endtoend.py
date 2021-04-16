@@ -10,7 +10,7 @@ from selenium import webdriver
 
 @pytest.fixture(scope='module')
 def test_app():
-    # Create the new board & update the board id environment variable
+    # Update the board id environment variable
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
 
@@ -19,8 +19,6 @@ def test_app():
 
     # construct the new application
     application, collection = create_app() 
-    
-    # create_board(collection)
     
     # start the app in its own thread.
     thread = Thread(target=lambda: application.run(use_reloader=False)) 
@@ -37,7 +35,7 @@ def driver():
     opts = webdriver.ChromeOptions()
     opts.add_argument('--headless') 
     opts.add_argument('--no-sandbox') 
-    with webdriver.Chrome('./chromedriver', options=opts) as driver:
+    with webdriver.Chrome('/usr/bin/chromedriver', options=opts) as driver:
         yield driver
 
 # UNCOMMENT THIS TO RUN THE E2E TESTS LOCALLY - COMMENT THE ABOVE
@@ -84,36 +82,6 @@ def test_task_journey(driver, test_app):
     assert driver.find_element_by_id("todoname").text == todo_title
     assert driver.find_element_by_id("tododesc").text == todo_desc
     assert driver.find_element_by_id("todostatus").text == "todo"
-
-def create_board(collection):
-    """
-    Creates our initial collection with the 3 empty lists.
-    """
-    collection.insert_one(
-        {
-            'board_id': 'test_board_id',
-            'list_id': 'todo_list_id',
-            'list_name': 'todo',
-            'cards': []
-        }
-    )
-    collection.insert_one(
-        {
-            'board_id': 'test_board_id',
-            'list_id': 'doing_list_id',
-            'list_name': 'doing',
-            'cards': []
-        }
-    )
-    collection.insert_one(
-        {
-            'board_id': 'test_board_id',
-            'list_id': 'done_list_id',
-            'list_name': 'done',
-            'cards': []
-        }
-    )
-
 
 def delete_board(collection):
     """

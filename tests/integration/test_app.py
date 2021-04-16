@@ -7,6 +7,8 @@ from unittest.mock import Mock
 from app import create_app
 from dotenv import load_dotenv, find_dotenv
 
+# FILE NEEDS TO BE CHANGED AFTER LEARNING ABOUT MONGOMOCK
+
 @pytest.fixture
 def client():
     # Use our test integration config instead of the 'real' version 
