@@ -2,55 +2,52 @@ import pytest
 import db_items as mongoDB
 import os
 import pymongo
-from unittest import mock
-from unittest.mock import Mock
+import mongomock
 from app import create_app
 from dotenv import load_dotenv, find_dotenv
+from unittest.mock import patch
 
-# FILE NEEDS TO BE CHANGED AFTER LEARNING ABOUT MONGOMOCK
+test_todos = [
+    {
+        "id": "id1",
+        "last_modified": "2020-08-19T14:09:28.403Z",
+        "title": "Test item 1",
+        "duedate": None
+    },
+    {
+        "id": "id2",
+        "last_modified": "2020-08-19T14:09:28.403Z",
+        "title": "Test item 2",
+        "duedate": None
+    },
+    {
+        "id": "id3",
+        "last_modified": "2020-08-19T14:09:28.403Z",
+        "title": "Test item 3",
+        "duedate": "2020-06-20T10:00:00.403Z"
+    }
+]
 
 @pytest.fixture
+@mongomock.patch(servers=(('server.example.com', 27017),))
 def client():
     # Use our test integration config instead of the 'real' version 
-    file_path = find_dotenv('.env.test')
-    load_dotenv(file_path, override=True)
-    # Create the new app.
-    test_app, collection = create_app()
-    # Use the app to create a test_client that can be used in our tests.
-    with test_app.test_client() as client: 
-        yield client
+    with mongomock.patch(servers=(('server.example.com'))):
+        file_path = find_dotenv('.env.test')
+        load_dotenv(file_path, override=True)
+        # Create the new app.
+        test_app, collection = create_app()
+        # Use the app to create a test_client that can be used in our tests.
+        with test_app.test_client() as client: 
+            yield client
 
-@mock.patch('requests.request')
-def test_index_page(mock_get_requests, client):
-    # Replace call to requests.get(url) with our own function
-    mock_get_requests.side_effect = mock_request
+def test_index_page(client):
+    dbclient = pymongo.MongoClient('server.example.com')
+    dbclient.TodoListDB.todos.insert_many(test_todos)
 
     response = client.get('/')
-    assert response.status_code == 200
-    assert response.headers['Content-Type'] == "text/html; charset=utf-8"
 
-def mock_request(method, url, params):
-    data = [{'_id': ObjectId('60747cb18817b98e218e847e'),
-            'board_id': 'TestBoard123',
-            'cards': {'card_dateLastActivity': '2021-04-12',
-                        'card_desc': 'Writing a song',
-                        'card_id': '08863bed-0dfc-4b2c-bcb3-000c8cd633be',
-                        'card_name': 'Song'},
-            'list_name': 'doing'},
-            {'_id': ObjectId('60747d29bd190dc8950efb82'),
-            'board_id': 'TestBoard123',
-            'cards': {'card_dateLastActivity': '2021-04-12',
-                        'card_desc': 'Studying',
-                        'card_id': '2',
-                        'card_name': 'Study'},
-            'list_name': 'doing'}]
-
- 
-    if method == mongoDB.get_list(collection,'TestBoard123','doing'):
-        response = Mock()
-        # sample_trello_lists_response should point to some test response data
-        response.json.return_value = data
-        return response
-
-    return None
- 
+    assert b"Test item 1" in response.data
+    assert b"Test item 2" in response.data
+    assert b"Test item 3" in response.data
+    assert b"Jun 20" in response.data
