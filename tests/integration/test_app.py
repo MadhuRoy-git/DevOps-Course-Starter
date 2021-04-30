@@ -31,7 +31,7 @@ test_todos = [
 @pytest.fixture
 def client():
     # Use our test integration config instead of the 'real' version 
-    with mongomock.patch(servers=(('server.example.com'))):
+    with mongomock.patch(servers=(('server.example.com', 27017),)):
         file_path = find_dotenv('.env.test')
         load_dotenv(file_path, override=True)
         # Create the new app.
@@ -40,9 +40,10 @@ def client():
         with test_app.test_client() as client: 
             yield client
 
+@mongomock.patch(servers=(('server.example.com', 27017),))
 def test_index_page(client):
-    client = pymongo.MongoClient('server.example.com')
-    client.TodoListDB.todos.insert_many(test_todos)
+    dbclient = pymongo.MongoClient('server.example.com')
+    dbclient.TodoListDB.todos.insert_many(test_todos)
 
     response = client.get('/')
 
