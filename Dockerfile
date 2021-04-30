@@ -15,7 +15,7 @@ ENTRYPOINT poetry run flask run -h 0.0.0.0 -p 5000
 # production build stage
 FROM base as production
 ENV FLASK_ENV=production
-ENV PORT=33507
+ENV PORT=5000
 RUN poetry config virtualenvs.create false --local
 RUN poetry install
 RUN poetry add gunicorn
@@ -35,7 +35,6 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
   && rm /etc/apt/sources.list.d/google-chrome.list \
   && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 # Install Chrome WebDriver
-RUN apt-get update && apt-get install unzip -y
 RUN CHROME_MAJOR_VERSION=$(google-chrome --version | sed -E "s/.* ([0-9]+)(\.[0-9]+){3}.*/\1/") \
   && CHROME_DRIVER_VERSION=$(wget --no-verbose -O - "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR_VERSION}") \
   && echo "Using chromedriver version: "$CHROME_DRIVER_VERSION \

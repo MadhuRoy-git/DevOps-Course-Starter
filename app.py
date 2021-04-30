@@ -14,10 +14,10 @@ def create_app():
     
     db_username = os.getenv('MONGO_USERNAME')
     db_password = os.getenv('MONGO_PASSWORD')
-    # db_connectionstring = os.getenv('MONGO_CONNECTION_URL')
+    db_connectionstring = os.getenv('MONGO_CONNECTION_URL')
 
     client = pymongo.MongoClient(
-        "mongodb+srv://{}:{}@cluster0.omkjb.mongodb.net/todoDB?retryWrites=true&w=majority".format(db_username, db_password),  
+        db_connectionstring,
         tlsCAFile=certifi.where()
     )
     db = client.TodoListDB

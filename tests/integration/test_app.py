@@ -9,22 +9,24 @@ from unittest.mock import patch
 
 test_todos = [
     {
-        "id": "id1",
-        "last_modified": "2020-08-19T14:09:28.403Z",
-        "title": "Test item 1",
-        "duedate": None
+        "board_id": "board1",
+        "list_name": "todolist",
+        "cards": {
+                "card_id": "card1",
+                "card_name": "Shopping",
+                "card_desc": "Groceries to do",
+                "card_dateLastActivity": "2020-08-19T14:09:28.403Z"
+            }
     },
     {
-        "id": "id2",
-        "last_modified": "2020-08-19T14:09:28.403Z",
-        "title": "Test item 2",
-        "duedate": None
-    },
-    {
-        "id": "id3",
-        "last_modified": "2020-08-19T14:09:28.403Z",
-        "title": "Test item 3",
-        "duedate": "2020-06-20T10:00:00.403Z"
+        "board_id": "board1",
+        "list_name": "todolist",
+        "cards": {
+                "card_id": "card2",
+                "card_name": "Music",
+                "card_desc": "Singing to do",
+                "card_dateLastActivity": "2020-07-19T14:09:28.403Z"
+            }
     }
 ]
 
@@ -47,7 +49,5 @@ def test_index_page(client):
 
     response = client.get('/')
 
-    assert b"Test item 1" in response.data
-    assert b"Test item 2" in response.data
-    assert b"Test item 3" in response.data
-    assert b"Jun 20" in response.data
+    assert response.status_code == 200
+    assert response.headers['Content-Type'] == 'text/html; charset=utf-8'
