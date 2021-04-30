@@ -8,7 +8,7 @@ script:
     - docker build --target test --tag my-test-image .
     - docker run my-test-image tests/unit
     - docker run my-test-image tests/integration
-    - docker run --env FLASK_ENV --env MONGO_CONNECTION_URL my-test-image tests/endtoend
+    - docker run --env FLASK_ENV --env BOARD_ID --env MONGO_CONNECTION_URL my-test-image tests/endtoend
     - docker build --target production --tag $DOCKER_USER/todo-app:latest .  
     - docker push $DOCKER_USER/todo-app:latest
     # Tag it for Heroku
