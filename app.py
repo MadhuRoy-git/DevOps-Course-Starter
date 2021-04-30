@@ -12,8 +12,6 @@ def create_app():
 
     board_id = os.getenv('BOARD_ID')
     
-    db_username = os.getenv('MONGO_USERNAME')
-    db_password = os.getenv('MONGO_PASSWORD')
     db_connectionstring = os.getenv('MONGO_CONNECTION_URL')
 
     client = pymongo.MongoClient(
