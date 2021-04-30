@@ -21,20 +21,12 @@ def get_items(collection, board_id):
         if dbList != None:
             for obj in dbList:
                 cards = obj["cards"]
-                card_id = ""
-                card_name = ""
-                card_desc = ""
-                card_dateLastActivity = ""
-                for card in cards:
-                    if card == "card_id":
-                        card_id = cards[card]
-                    if card == "card_name":
-                        card_name = cards[card]
-                    if card == "card_desc":
-                        card_desc = cards[card]
-                    if card == "card_dateLastActivity":
-                        card_dateLastActivity = cards[card]
+                card_id = cards.get("card_id", "")
+                card_name = cards.get("card_name", "")
+                card_desc = cards.get("card_desc", "")
+                card_dateLastActivity = cards.get("card_dateLastActivity", "")
                 new_card = Card(card_id, card_name, card_desc, list_name, card_dateLastActivity)
+
                 if list_name == "todo":
                     todo_cards.append(new_card)
                 elif list_name == "doing":

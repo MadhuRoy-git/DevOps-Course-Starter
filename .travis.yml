@@ -9,7 +9,7 @@ script:
     - docker run my-test-image tests/unit
     # Commented the integration tests for the purpose of this exercise. This will be looked at later after learning more about MongoMock
     # - docker run my-test-image tests/integration
-    - docker run --env BOARD_ID --env TODO_LIST_ID --env DOING_LIST_ID --env DONE_LIST_ID --env FLASK_ENV --env MONGO_USERNAME --env MONGO_PASSWORD my-test-image tests/endtoend
+    - docker run --env BOARD_ID --env FLASK_ENV --env MONGO_CONNECTION_URL my-test-image tests/endtoend
     - docker build --target production --tag $DOCKER_USER/todo-app:latest .  
     - docker push $DOCKER_USER/todo-app:latest
     # Tag it for Heroku

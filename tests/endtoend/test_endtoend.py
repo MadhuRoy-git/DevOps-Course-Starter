@@ -14,7 +14,6 @@ def test_app():
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
 
-    # board_id = create_board('My E2E Test Board')
     os.environ['BOARD_ID'] = 'test_board_id'
 
     # construct the new application
