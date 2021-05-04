@@ -42,7 +42,6 @@ def client():
         with test_app.test_client() as client: 
             yield client
 
-@mongomock.patch(servers=(('server.example.com', 27017),))
 def test_index_page(client):
     dbclient = pymongo.MongoClient('server.example.com')
     dbclient.TodoListDB.todos.insert_many(test_todos)

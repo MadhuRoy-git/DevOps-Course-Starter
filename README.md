@@ -10,9 +10,7 @@ FLASK_ENV=development
 
 BOARD_ID=# your board id
 
-MONGO_USERNAME=# your Mongo DB user id
-MONGO_PASSWORD=# your Mongo DB password
-MONGO_CLUSTER=# your Mongo DB cluster
+MONGO_CONNECTION_URL=# your Mongo Connection URL
 ```
 Note that .env has been added to the gitignore file so that these secrets will not be commited to git. Now, our app is ready to be run.
 
