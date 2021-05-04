@@ -2,19 +2,15 @@
 
 ## Initial Setup
 
-A file called .env has been created with the environment variables below. This .env file is used by flask to set environment variables. This enables things like development mode (which also enables features like hot reloading when you make a file change). Populate the following variables inside the .env file with your Trello App API details/credentials:
+A file called .env has been created with the environment variables below. This .env file is used by flask to set environment variables. This enables things like development mode (which also enables features like hot reloading when you make a file change). Populate the following variables inside the .env file with your Mongo DB details/credentials:
 
 ```bash
 FLASK_APP=app
 FLASK_ENV=development
 
-apiKey=# your trello api key
-apiToken=# your trello api token
-boardId=# your board id
+BOARD_ID=# your board id
 
-TODO_LIST_ID=# your 'todo' list id
-DOING_LIST_ID=# your 'doing' list id
-DONE_LIST_ID=# your 'done' list id
+MONGO_CONNECTION_URL=# your Mongo Connection URL
 ```
 Note that .env has been added to the gitignore file so that these secrets will not be commited to git. Now, our app is ready to be run.
 
@@ -37,7 +33,7 @@ docker run --env-file ./.env -p 5000:5000 --mount type=bind,source="$(pwd)",targ
 To build a docker image (in Production mode) and start the application in Development mode , run the following:
 ```bash
 $ docker build --target production --tag todo-app:prod .
-$ docker run -d -p 33507:33507 --env-file ./.env todo-app:prod 
+$ docker run -d -p 5000:5000 --env-file ./.env todo-app:prod 
 ```
 
 We can run the application in a VM using Vagrant within the poetry environment by running:
@@ -74,7 +70,7 @@ docker run my-test-image tests/unit
 docker run my-test-image tests/integration
 
 ### Running the E2E Tests via docker , the environment variables need to be passed by the .env file
-docker run --env-file .env my-test-image tests/endtoend
+docker run --env-file ./.env my-test-image tests/endtoend
 
 ### Running the application on Heroku
 heroku open
