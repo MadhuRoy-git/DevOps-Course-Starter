@@ -1,15 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for
 import db_items as mongoDB
 from viewmodel import ViewModel
-from app_config import Config
 import pymongo
 import certifi
 import os
+from flask-login import LoginManager
 
 def create_app():
     app = Flask(__name__) 
-    app.config.from_object(Config())
-
+    
     board_id = os.getenv('BOARD_ID')
     
     db_connectionstring = os.getenv('MONGO_CONNECTION_URL')
@@ -20,6 +19,16 @@ def create_app():
     )
     db = client.TodoListDB
     collection = db.todos
+
+    login_manager = LoginManager()
+    @login_manager.unauthorized_handler 
+    def unauthenticated():
+        pass # Add logic to redirect to the
+         # Github OAuth flow when unauthenticated
+
+    @login_manager.user_loader 
+    def load_user(user_id):
+        return None login_manager.init_app(app)
     
     @app.route('/')
     def index():

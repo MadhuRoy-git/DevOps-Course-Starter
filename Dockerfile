@@ -10,6 +10,7 @@ COPY . /DevOps-Course-Starter
 FROM base as development
 RUN poetry config virtualenvs.create false --local
 RUN poetry install
+RUN poetry add oauthlib flask-login
 ENTRYPOINT poetry run flask run -h 0.0.0.0 -p 5000
 
 # production build stage
