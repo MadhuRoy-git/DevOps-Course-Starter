@@ -19,6 +19,7 @@ ENV FLASK_ENV=production
 ENV PORT=5000
 RUN poetry config virtualenvs.create false --local
 RUN poetry install
+RUN poetry add oauthlib flask-login
 RUN poetry add gunicorn
 ENTRYPOINT ["sh", "./scripts/entrypoint.sh"]
 

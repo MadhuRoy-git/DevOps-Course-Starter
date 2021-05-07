@@ -14,6 +14,9 @@ secret_key = os.environ.get('SECRET_KEY', 'secret_key')
 
 def create_app():
     app = Flask(__name__) 
+
+    login_disabled = os.environ.get('LOGIN_DISABLED')
+    app.config['LOGIN_DISABLED'] = login_disabled
     
     board_id = os.getenv('BOARD_ID')
     db_connectionstring = os.getenv('MONGO_CONNECTION_URL')
