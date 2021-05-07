@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, abort
 import db_items as mongoDB
 from viewmodel import ViewModel
 from user import User
@@ -6,14 +6,18 @@ import pymongo
 import certifi
 import os
 import requests
-from flask_login import LoginManager, login_required, login_user
+from flask_login import LoginManager, login_required, login_user, current_user
 from oauthlib.oauth2 import WebApplicationClient
    
 secret_key = os.environ.get('SECRET_KEY', 'secret_key')
+admin_user = os.environ.get('APP_ADMIN_USER_ID', 'admin')
 client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
 login_manager = LoginManager()
 appClient = WebApplicationClient(client_id)
+
+ROLE_READER = 'reader'
+ROLE_WRITER = 'writer'
 
 def create_app():
     app = Flask(__name__) 
@@ -65,12 +69,19 @@ def create_app():
         login_user(User(user_response.json()['login']))        
         return redirect(url_for('index'))
     
+    def get_user_role():             
+        if (app.config.get('LOGIN_DISABLED') or current_user.user_id == admin_user):                        
+            return ROLE_WRITER
+        else:            
+            return ROLE_READER
+
     @app.route('/')
     @login_required
     def index():
         print("Inside index", flush=True)
         items = mongoDB.get_items(collection, board_id)
-        item_view_model = ViewModel(items[0], items[1], items[2])
+        user_role = get_user_role()
+        item_view_model = ViewModel(items[0], items[1], items[2], user_role)
         return render_template('index.html', view_model=item_view_model)
 
     @app.route('/add', methods=['POST'])
@@ -78,26 +89,43 @@ def create_app():
     def add():
         name = request.form.get('new_item_name')
         description = request.form.get('new_item_description')
-        mongoDB.create_item(collection, board_id, name, description)
-        return redirect(url_for('index'))
+        
+        user_role = get_user_role()
+        if (user_role == ROLE_WRITER):
+            mongoDB.create_item(collection, board_id, name, description)
+            return redirect(url_for('index'))
+        else:
+            return abort(403)
 
     @app.route('/start/<item_id>', methods=['POST'])
     @login_required
     def start_item(item_id):
-        mongoDB.start_item(collection, board_id, item_id)
-        return redirect(url_for('index'))
-
+        user_role = get_user_role()
+        if (user_role == ROLE_WRITER):
+            mongoDB.start_item(collection, board_id, item_id)
+            return redirect(url_for('index'))
+        else:
+            return abort(403)
+        
     @app.route('/complete/<item_id>', methods=['POST'])
     @login_required
     def complete_item(item_id):
-        mongoDB.complete_item(collection, board_id, item_id)
-        return redirect(url_for('index'))
+        user_role = get_user_role()
+        if (user_role == ROLE_WRITER):
+            mongoDB.complete_item(collection, board_id, item_id)
+            return redirect(url_for('index'))
+        else:
+            return abort(403)
 
     @app.route('/undo/<item_id>', methods=['POST'])
     @login_required
     def undo_item(item_id):
-        mongoDB.undo_item(collection, board_id, item_id)
-        return redirect(url_for('index'))
+        user_role = get_user_role()
+        if (user_role == ROLE_WRITER):
+            mongoDB.undo_item(collection, board_id, item_id)
+            return redirect(url_for('index'))
+        else:
+            return abort(403)
 
     return app, collection
 
