@@ -5,7 +5,6 @@ from card import Card
 import sys
 import uuid
 from datetime import date
-import pprint
 
 def get_items(collection, board_id):
     """

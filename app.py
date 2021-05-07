@@ -8,20 +8,22 @@ import os
 import requests
 from flask_login import LoginManager, login_required, login_user
 from oauthlib.oauth2 import WebApplicationClient
-
-login_manager = LoginManager()
+   
 secret_key = os.environ.get('SECRET_KEY', 'secret_key')
+client_id = os.getenv('CLIENT_ID')
+client_secret = os.getenv('CLIENT_SECRET')
+login_manager = LoginManager()
+appClient = WebApplicationClient(client_id)
 
 def create_app():
     app = Flask(__name__) 
 
-    login_disabled = os.environ.get('LOGIN_DISABLED')
+    login_disabled = os.environ.get('LOGIN_DISABLED', 'False') == 'True'
     app.config['LOGIN_DISABLED'] = login_disabled
     
     board_id = os.getenv('BOARD_ID')
     db_connectionstring = os.getenv('MONGO_CONNECTION_URL')
-    client_id = os.getenv('CLIENT_ID')
-    client_secret = os.getenv('CLIENT_SECRET')
+    
 
     client = pymongo.MongoClient(
         db_connectionstring,
@@ -30,20 +32,23 @@ def create_app():
     db = client.TodoListDB
     collection = db.todos
 
-    appClient = WebApplicationClient(client_id)
-    # appClient.prepare_request_uri('http://localhost:5000', redirect_uri='http://localhost:5000/login/callback')
+    print(login_disabled, flush=True)
 
     @login_manager.unauthorized_handler 
     def unauthenticated():
+        print("Inside unauthenticated", flush=True)
         uri = appClient.prepare_request_uri("https://github.com/login/oauth/authorize")
         return redirect(uri)
         
     @login_manager.user_loader 
     def load_user(user_id):
+        print("Inside load_user : " + user_id, flush=True)
         return User(user_id) 
+        # return None
 
     @app.route('/login/callback', methods=['GET'])
     def login_callback():
+        print("Inside login_callback", flush=True)
         token_response = requests.post('https://github.com/login/oauth/access_token', data={
                 'client_id': client_id,
                 'client_secret': client_secret,
@@ -63,6 +68,7 @@ def create_app():
     @app.route('/')
     @login_required
     def index():
+        print("Inside index", flush=True)
         items = mongoDB.get_items(collection, board_id)
         item_view_model = ViewModel(items[0], items[1], items[2])
         return render_template('index.html', view_model=item_view_model)
