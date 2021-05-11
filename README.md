@@ -75,3 +75,10 @@ docker run --env-file ./.env my-test-image tests/endtoend
 ### Running the application on Heroku
 heroku open
 The URL for the app on Heroku is : https://madhutodo.herokuapp.com/
+
+### OAuth with Git
+Setup below environment variables to login with Git credetails
+```
+CLIENT_ID
+CLIENT_SECRET
+APP_ADMIN_USER_ID

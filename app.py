@@ -36,23 +36,18 @@ def create_app():
     db = client.TodoListDB
     collection = db.todos
 
-    print(login_disabled, flush=True)
-
     @login_manager.unauthorized_handler 
     def unauthenticated():
-        print("Inside unauthenticated", flush=True)
         uri = appClient.prepare_request_uri("https://github.com/login/oauth/authorize")
         return redirect(uri)
         
     @login_manager.user_loader 
     def load_user(user_id):
-        print("Inside load_user : " + user_id, flush=True)
         return User(user_id) 
         # return None
 
     @app.route('/login/callback', methods=['GET'])
     def login_callback():
-        print("Inside login_callback", flush=True)
         token_response = requests.post('https://github.com/login/oauth/access_token', data={
                 'client_id': client_id,
                 'client_secret': client_secret,
@@ -78,7 +73,6 @@ def create_app():
     @app.route('/')
     @login_required
     def index():
-        print("Inside index", flush=True)
         items = mongoDB.get_items(collection, board_id)
         user_role = get_user_role()
         item_view_model = ViewModel(items[0], items[1], items[2], user_role)
