@@ -10,7 +10,7 @@ from flask_login import LoginManager, login_required, login_user, current_user
 from oauthlib.oauth2 import WebApplicationClient
    
 secret_key = os.environ.get('SECRET_KEY', 'secret_key')
-admin_user = os.environ.get('APP_ADMIN_USER_ID', 'admin')
+admin_user = os.environ.get('APP_ADMIN_USER_ID', 'MadhuRoy-git')
 client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
 login_manager = LoginManager()
@@ -48,18 +48,25 @@ def create_app():
 
     @app.route('/login/callback', methods=['GET'])
     def login_callback():
-        token_response = requests.post('https://github.com/login/oauth/access_token', data={
-                'client_id': client_id,
-                'client_secret': client_secret,
-                'code': request.args.get('code')
-            }, headers={'Accept': 'application/json'})
+        token_url, headers, body = client.prepare_token_request(
+                                    'https://github.com/login/oauth/access_token',
+                                    authorization_response=request.url,
+                                    redirect_url=request.base_url,
+                                    code=request.args.get('code')
+                                )
+
+        token_response = requests.post(
+                        token_url,
+                        headers=headers,
+                        data=body,
+                        auth=(client_id, client_secret),
+                    )
 
         appClient.parse_request_body_response(token_response.text)
 
-        user_response = requests.get('https://api.github.com/user', headers={
-            'Accept': 'application/json', 
-            'Authorization': f"token {token_response.json()['access_token']}"
-            })
+        userinfo_endpoint = 'https://api.github.com/user'
+        uri, headers, body = appClient.add_token(userinfo_endpoint)
+        user_response = requests.get(uri, headers=headers, data=body)
 
         login_user(User(user_response.json()['login']))        
         return redirect(url_for('index'))

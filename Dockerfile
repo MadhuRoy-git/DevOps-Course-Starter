@@ -10,7 +10,6 @@ COPY . /DevOps-Course-Starter
 FROM base as development
 RUN poetry config virtualenvs.create false --local
 RUN poetry install
-RUN poetry add oauthlib flask-login
 ENTRYPOINT poetry run flask run -h 0.0.0.0 -p 5000
 
 # production build stage
@@ -19,7 +18,6 @@ ENV FLASK_ENV=production
 ENV PORT=5000
 RUN poetry config virtualenvs.create false --local
 RUN poetry install
-RUN poetry add oauthlib flask-login
 RUN poetry add gunicorn
 ENTRYPOINT ["sh", "./scripts/entrypoint.sh"]
 
@@ -27,7 +25,6 @@ ENTRYPOINT ["sh", "./scripts/entrypoint.sh"]
 FROM base as test
 RUN poetry config virtualenvs.create false --local
 RUN poetry install
-RUN poetry add oauthlib flask-login
 RUN apt-get update && apt-get install wget gnupg unzip -y
 # Install Chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
