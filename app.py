@@ -48,7 +48,7 @@ def create_app():
 
     @app.route('/login/callback', methods=['GET'])
     def login_callback():
-        token_url, headers, body = client.prepare_token_request(
+        token_url, headers, body = appClient.prepare_token_request(
                                     'https://github.com/login/oauth/access_token',
                                     authorization_response=request.url,
                                     redirect_url=request.base_url,
