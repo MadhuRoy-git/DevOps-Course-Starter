@@ -1,18 +1,33 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, abort
 import db_items as mongoDB
 from viewmodel import ViewModel
-from app_config import Config
+from user import User
 import pymongo
 import certifi
 import os
+import requests
+from flask_login import LoginManager, login_required, login_user, current_user
+from oauthlib.oauth2 import WebApplicationClient
+   
+secret_key = os.environ.get('SECRET_KEY', 'secret_key')
+admin_user = os.environ.get('APP_ADMIN_USER_ID', 'MadhuRoy-git')
+client_id = os.getenv('CLIENT_ID')
+client_secret = os.getenv('CLIENT_SECRET')
+login_manager = LoginManager()
+appClient = WebApplicationClient(client_id)
+
+ROLE_READER = 'reader'
+ROLE_WRITER = 'writer'
 
 def create_app():
     app = Flask(__name__) 
-    app.config.from_object(Config())
 
-    board_id = os.getenv('BOARD_ID')
+    login_disabled = os.environ.get('LOGIN_DISABLED', 'False') == 'True'
+    app.config['LOGIN_DISABLED'] = login_disabled
     
+    board_id = os.getenv('BOARD_ID')
     db_connectionstring = os.getenv('MONGO_CONNECTION_URL')
+    
 
     client = pymongo.MongoClient(
         db_connectionstring,
@@ -20,35 +35,101 @@ def create_app():
     )
     db = client.TodoListDB
     collection = db.todos
+
+    @login_manager.unauthorized_handler 
+    def unauthenticated():
+        uri = appClient.prepare_request_uri("https://github.com/login/oauth/authorize")
+        return redirect(uri)
+        
+    @login_manager.user_loader 
+    def load_user(user_id):
+        return User(user_id) 
+        # return None
+
+    @app.route('/login/callback', methods=['GET'])
+    def login_callback():
+        token_url, headers, body = appClient.prepare_token_request(
+                                    'https://github.com/login/oauth/access_token',
+                                    authorization_response=request.url,
+                                    redirect_url=request.base_url,
+                                    code=request.args.get('code')
+                                )
+
+        token_response = requests.post(
+                        token_url,
+                        headers=headers,
+                        data=body,
+                        auth=(client_id, client_secret),
+                    )
+
+        appClient.parse_request_body_response(token_response.text)
+
+        userinfo_endpoint = 'https://api.github.com/user'
+        uri, headers, body = appClient.add_token(userinfo_endpoint)
+        user_response = requests.get(uri, headers=headers, data=body)
+
+        login_user(User(user_response.json()['login']))        
+        return redirect(url_for('index'))
     
+    def get_user_role():             
+        if (app.config.get('LOGIN_DISABLED') or current_user.user_id == admin_user):                        
+            return ROLE_WRITER
+        else:            
+            return ROLE_READER
+
     @app.route('/')
+    @login_required
     def index():
         items = mongoDB.get_items(collection, board_id)
-        item_view_model = ViewModel(items[0], items[1], items[2])
+        user_role = get_user_role()
+        item_view_model = ViewModel(items[0], items[1], items[2], user_role)
         return render_template('index.html', view_model=item_view_model)
 
     @app.route('/add', methods=['POST'])
+    @login_required
     def add():
         name = request.form.get('new_item_name')
         description = request.form.get('new_item_description')
-        mongoDB.create_item(collection, board_id, name, description)
-        return redirect(url_for('index'))
+        
+        user_role = get_user_role()
+        if (user_role == ROLE_WRITER):
+            mongoDB.create_item(collection, board_id, name, description)
+            return redirect(url_for('index'))
+        else:
+            return abort(403)
 
     @app.route('/start/<item_id>', methods=['POST'])
+    @login_required
     def start_item(item_id):
-        mongoDB.start_item(collection, board_id, item_id)
-        return redirect(url_for('index'))
-
+        user_role = get_user_role()
+        if (user_role == ROLE_WRITER):
+            mongoDB.start_item(collection, board_id, item_id)
+            return redirect(url_for('index'))
+        else:
+            return abort(403)
+        
     @app.route('/complete/<item_id>', methods=['POST'])
+    @login_required
     def complete_item(item_id):
-        mongoDB.complete_item(collection, board_id, item_id)
-        return redirect(url_for('index'))
+        user_role = get_user_role()
+        if (user_role == ROLE_WRITER):
+            mongoDB.complete_item(collection, board_id, item_id)
+            return redirect(url_for('index'))
+        else:
+            return abort(403)
 
     @app.route('/undo/<item_id>', methods=['POST'])
+    @login_required
     def undo_item(item_id):
-        mongoDB.undo_item(collection, board_id, item_id)
-        return redirect(url_for('index'))
+        user_role = get_user_role()
+        if (user_role == ROLE_WRITER):
+            mongoDB.undo_item(collection, board_id, item_id)
+            return redirect(url_for('index'))
+        else:
+            return abort(403)
 
     return app, collection
 
 app, collection = create_app()
+app.secret_key = secret_key
+login_manager.init_app(app)

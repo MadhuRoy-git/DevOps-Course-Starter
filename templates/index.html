@@ -22,7 +22,9 @@
         <td id ="tododesc">{{ item.description }}</td>
         <td>
           <form action="start/{{ item.id }}" method="post">
-            <button class="btn btn-outline-primary" type="submit" id="start-btn">Start</button>
+            {% if view_model.role == 'writer' %}
+              <button class="btn btn-outline-primary" type="submit" id="start-btn">Start</button>
+            {% endif %}
           </form>
         </td>
       </tr>
@@ -47,7 +49,9 @@
         <td id ="doingdesc">{{ item.description }}</td>
         <td>
           <form action="complete/{{ item.id }}" method="post">
-            <button class="btn btn-outline-primary" type="submit" id="complete-btn">Complete</button>
+            {% if view_model.role == 'writer' %}
+              <button class="btn btn-outline-primary" type="submit" id="complete-btn">Complete</button>
+            {% endif %}  
           </form>
         </td>
       </tr>
@@ -73,7 +77,9 @@
           <td id ="donedesc">{{ item.description }}</td>
           <td>
             <form action="undo/{{ item.id }}" method="post">
-              <button class="btn btn-outline-primary" type="submit" id="undo-btn">Undo</button>
+              {% if view_model.role == 'writer' %}
+                <button class="btn btn-outline-primary" type="submit" id="undo-btn">Undo</button>
+              {% endif %}              
             </form>
           </td>
         </tr>
@@ -87,7 +93,9 @@
           <td>{{ item.description }}</td>
           <td>
             <form action="undo/{{ item.id }}" method="post">
-              <button class="btn btn-outline-primary" type="submit">Undo</button>
+              {% if view_model.role == 'writer' %}
+                <button class="btn btn-outline-primary" type="submit">Undo</button>
+              {% endif %}              
             </form>
           </td>
         </tr>
@@ -111,10 +119,12 @@
 
   </table>
 <form action="/add" method="post">
-  <label for="exampleInput1">Item to be added:</label><br>
-  <input type="text" name="new_item_name" placeholder="title" id="name_input">
-  <input type="text" name="new_item_description" placeholder="description" id="desc_input">
-  <button class="btn btn-outline-primary" type="submit" id="add-item">Add your item</button>
+  {% if view_model.role == 'writer' %}                
+    <label for="exampleInput1">Item to be added:</label><br>
+    <input type="text" name="new_item_name" placeholder="title" id="name_input">
+    <input type="text" name="new_item_description" placeholder="description" id="desc_input">
+    <button class="btn btn-outline-primary" type="submit" id="add-item">Add your item</button>
+  {% endif %}  
 </form>
 <br/>
 {% endblock %}

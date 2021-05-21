@@ -2,10 +2,11 @@ from datetime import datetime
 import dateutil.parser
 
 class ViewModel:
-    def __init__(self, todo_items, doing_items, done_items):
+    def __init__(self, todo_items, doing_items, done_items, role='reader'):
         self._todo_items = todo_items
         self._doing_items = doing_items
         self._done_items = done_items
+        self._role = role
 
     @property
     def todo_items(self):
@@ -18,6 +19,10 @@ class ViewModel:
     @property
     def done_items(self):
         return self._done_items
+
+    @property
+    def role(self):
+        return self._role
 
     def recent_done_items(self, items):
         list_to_return = []
