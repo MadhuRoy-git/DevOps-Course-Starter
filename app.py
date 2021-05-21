@@ -51,7 +51,6 @@ def create_app():
         token_url, headers, body = appClient.prepare_token_request(
                                     'https://github.com/login/oauth/access_token',
                                     authorization_response=request.url,
-                                    redirect_url=request.base_url,
                                     code=request.args.get('code')
                                 )
 
