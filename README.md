@@ -10,7 +10,7 @@ FLASK_ENV=development
 
 BOARD_ID=# your board id
 
-MONGO_CONNECTION_URL=# your Mongo Connection URL
+MONGO_CONNECTION_URL=# your Mongo Connection URL (Changed this to access Azure Cosmos DB via Mongo API)
 ```
 Note that .env has been added to the gitignore file so that these secrets will not be commited to git. Now, our app is ready to be run.
 
