@@ -72,9 +72,8 @@ docker run my-test-image tests/integration
 ### Running the E2E Tests via docker , the environment variables need to be passed by the .env file
 docker run --env-file ./.env my-test-image tests/endtoend
 
-### Running the application on Heroku
-heroku open
-The URL for the app on Heroku is : https://madhutodo.herokuapp.com/
+### Running the application on Azure
+The URL for the app on Azure is : http://madhuazuretodo.azurewebsites.net/
 
 ### OAuth with GitHub
 Setup below environment variables to login with GitHub credetails. If you try accessing the website , you will first be redirected to the GitHub website for logging in with your GitHub ID, once you have logged in , you will be redirected to the website.
