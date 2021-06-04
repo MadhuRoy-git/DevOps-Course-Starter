@@ -7,6 +7,7 @@ script:
     - docker run my-test-image tests/unit
     - docker run my-test-image tests/integration
     - docker run --env FLASK_ENV --env BOARD_ID --env MONGO_CONNECTION_URL my-test-image tests/endtoend
+before_deploy:
     - docker build --target production --tag $DOCKER_USER/todo-app:latest .  
     - docker push $DOCKER_USER/todo-app:latest
 deploy:   
