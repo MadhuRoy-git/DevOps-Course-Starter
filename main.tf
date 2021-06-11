@@ -16,8 +16,8 @@ data "azurerm_resource_group" "main" {
 
 resource "azurerm_app_service_plan" "main" {
     name = "terraformed-asp"
-    location = data.azurerm_resource_group.main.location
-    resource_group_name = data.azurerm_resource_group.main.name
+    location = var.location
+    resource_group_name = var.prefix_name
     kind = "Linux"
     reserved = true
 
@@ -29,8 +29,8 @@ resource "azurerm_app_service_plan" "main" {
 
 resource "azurerm_app_service" "main" {
     name = "madhuterraformhelloapp"
-    location = data.azurerm_resource_group.main.location
-    resource_group_name = data.azurerm_resource_group.main.name
+    location = var.location
+    resource_group_name = var.prefix_name
     app_service_plan_id = azurerm_app_service_plan.main.id
 
     site_config {
@@ -46,8 +46,8 @@ resource "azurerm_app_service" "main" {
 
 resource "azurerm_cosmosdb_account" "maindbaccount" {
   name                = "madhutf-cosmosdb-account"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
+  resource_group_name = var.prefix_name
+  location            = var.location
   offer_type          = "Standard"
   kind                = "MongoDB"
 
@@ -63,8 +63,11 @@ resource "azurerm_cosmosdb_account" "maindbaccount" {
     max_staleness_prefix    = 200
   }
   geo_location {
-    location          = data.azurerm_resource_group.main.location
+    location          = var.location
     failover_priority = 0
+  }
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
