@@ -10,4 +10,5 @@ variable "location" {
 
 variable "CLIENT_ID" {
     description = "The Github Client ID for the Terraform Azure app"
+    default = "2849db5f59c50e93a017"
 }

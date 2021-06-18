@@ -1,4 +1,10 @@
 terraform {
+    backend "azurerm" {
+      resource_group_name   = "AmericanExpress2_MadhuRoy_ProjectExercise"
+      storage_account_name  = "madhustoreacc"
+      container_name        = "madhucontain"
+      key                   = "terraform.tfstate"
+    }
     required_providers {
         azurerm = {
             source = "hashicorp/azurerm"
@@ -67,7 +73,7 @@ resource "azurerm_cosmosdb_account" "maindbaccount" {
     failover_priority = 0
   }
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 

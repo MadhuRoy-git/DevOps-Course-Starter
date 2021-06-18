@@ -7,12 +7,19 @@ script:
     - docker run my-test-image tests/unit
     - docker run my-test-image tests/integration
     - docker run --env FLASK_ENV --env BOARD_ID --env MONGO_CONNECTION_URL my-test-image tests/endtoend
+install:
+    - wget https://releases.hashicorp.com/terraform/"$TF_VERSION"/ terraform_"$TF_VERSION"_linux_amd64.zip
+    - unzip terraform_"$TF_VERSION"_linux_amd64.zip
+    - sudo mv terraform /usr/local/bin/
+    - rm terraform_"$TF_VERSION"_linux_amd64.zip
+    - terraform init
 before_deploy:
     - docker build --target production --tag $DOCKER_USER/todo-app:latest .  
     - docker push $DOCKER_USER/todo-app:latest
+    - terraform apply -auto-approve
 deploy:   
     provider: script
     script: 
-        - curl -dH -X POST "$AZURE_WEBHOOK_URL"
+        - curl -dH -X POST "$(terraform output -raw cd_webhook)"
     on:  
         branch: master
