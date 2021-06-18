@@ -22,4 +22,4 @@ deploy:
     script: 
         - curl -dH -X POST "$(terraform output -raw cd_webhook)"
     on:  
-        branch: master
+        all_branches: true
