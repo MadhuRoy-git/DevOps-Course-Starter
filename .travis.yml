@@ -20,6 +20,6 @@ before_deploy:
 deploy:   
     provider: script
     script: 
-        - curl --fail -dH -X POST "$(terraform output -raw cd_webhook)"
+        - curl --fail -H -X --data-urlencode POST "$(terraform output -raw cd_webhook)"
     on:  
         all_branches: true
