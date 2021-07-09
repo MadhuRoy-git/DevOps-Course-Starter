@@ -45,7 +45,10 @@ resource "azurerm_app_service" "main" {
     }
 
     app_settings = {
+    "BOARD_ID" = "Board123"
     "DOCKER_REGISTRY_SERVER_URL" = "https://index.docker.io"
+    "DOCKER_USER" = "madhuaxp"
+    "OAUTHLIB_INSECURE_TRANSPORT" = "1"
     "MONGO_CONNECTION_URL" = "mongodb://${azurerm_cosmosdb_account.maindbaccount.name}:${azurerm_cosmosdb_account.maindbaccount.primary_key}@${azurerm_cosmosdb_account.maindbaccount.name}.mongo.cosmos.azure.com:10255/DefaultDatabase?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000"
     }
 }

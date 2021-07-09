@@ -10,5 +10,37 @@ variable "location" {
 
 variable "CLIENT_ID" {
     description = "The Github Client ID for the Terraform Azure app"
-    default = "2849db5f59c50e93a017"
+}
+
+variable "CLIENT_SECRET" {
+    description = "The Github Client Secret for the Terraform Azure app"
+}
+
+variable "BOARD_ID" {
+    description = "The Board ID for the Terraform Azure app"
+    default = "Board123"
+}
+
+variable "DOCKER_REGISTRY_SERVER_URL" {
+    description = "The Docker Registry URL for the Terraform Azure app"
+    default = "https://index.docker.io"
+}
+
+variable "DOCKER_USER" {
+    description = "The Docker Account User for the Terraform Azure app"
+    default = "madhuaxp"
+}
+
+variable "DOCKER_PASSWORD" {
+    description = "The Docker Account Password for the Terraform Azure app"
+}
+
+variable "OAUTHLIB_INSECURE_TRANSPORT" {
+    description = "Disable the SSL check for the Terraform Azure app"
+    default = "1"
+}
+
+variable "MONGO_CONNECTION_URL" {
+    description = "MongoDB connection URL for the Terraform Azure app"
+    default = "mongodb://madhutf-cosmosdb-account:NZ0jnbVsEyUX6Fjpdm7bQN7mX8GyoN01S0xsxsThZaBbWcj3fUrQEdPP82wUwR2EAANYdOAPSZUrcpI3vqiH8g==@madhutf-cosmosdb-account.mongo.cosmos.azure.com:10255/DefaultDatabase?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000"
 }
