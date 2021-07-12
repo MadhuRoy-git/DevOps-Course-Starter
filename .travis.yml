@@ -17,7 +17,8 @@ before_deploy:
     - docker build --target production --tag $DOCKER_USER/todo-app:latest .  
     - docker push $DOCKER_USER/todo-app:latest
     - terraform apply -var 'CLIENT_ID=$CLIENT_ID' -var 'CLIENT_SECRET=$CLIENT_SECRET' -var 'DOCKER_PASSWORD=$DOCKER_PASSWORD' -var 'MONGO_CONNECTION_URL=$MONGO_CONNECTION_URL' -auto-approve
-deploy:   
+deploy:
+    skip_cleanup: true   
     provider: script
     script: 
         - bash ./scripts/travisdeploy.sh
