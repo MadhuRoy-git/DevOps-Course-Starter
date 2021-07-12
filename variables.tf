@@ -42,5 +42,4 @@ variable "OAUTHLIB_INSECURE_TRANSPORT" {
 
 variable "MONGO_CONNECTION_URL" {
     description = "MongoDB connection URL for the Terraform Azure app"
-    default = "mongodb://madhutf-cosmosdb-account:NZ0jnbVsEyUX6Fjpdm7bQN7mX8GyoN01S0xsxsThZaBbWcj3fUrQEdPP82wUwR2EAANYdOAPSZUrcpI3vqiH8g==@madhutf-cosmosdb-account.mongo.cosmos.azure.com:10255/DefaultDatabase?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000"
 }
