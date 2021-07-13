@@ -75,9 +75,16 @@ docker run --env-file ./.env my-test-image tests/endtoend
 ### Running the application on Azure
 The URL for the app on Azure is : http://madhuazuretodo.azurewebsites.net/
 
+### Running the application on Azure via Terraform
+The Infrastructure is provided in the Azure cloud by Terraform (IaC). The terraform configuration is in the main.tf file.
+The environment variables are provided by the app_settings block.
+The variables can be input during runtime using the variables.tf file
+The URL for the app on Azure via Terraform is : https://madhuterraformhelloapp.azurewebsites.net
+
 ### OAuth with GitHub
 Setup below environment variables to login with GitHub credetails. If you try accessing the website , you will first be redirected to the GitHub website for logging in with your GitHub ID, once you have logged in , you will be redirected to the website.
 ```bash
 CLIENT_ID=# your oauth client id
 CLIENT_SECRET=# your oauth client secret
 APP_ADMIN_USER_ID=# your oauth app user id , is 'admin' by default
+

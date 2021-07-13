@@ -8,3 +8,5 @@ geckodriver
 geckodriver.log
 .gitignore
 Dockerfile*
+.terraform/
+terraform.tfstate

@@ -128,3 +128,6 @@ geckodriver.log
 ### Log files ###
 logs.txt
 
+# Terraform folder
+.terraform/
+terraform.tfstate
