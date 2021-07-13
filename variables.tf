@@ -13,6 +13,7 @@ variable "CLIENT_ID" {
 }
 
 variable "CLIENT_SECRET" {
+    sensitive = true
     description = "The Github Client Secret for the Terraform Azure app"
 }
 
@@ -21,17 +22,13 @@ variable "BOARD_ID" {
     default = "Board123"
 }
 
-variable "DOCKER_REGISTRY_SERVER_URL" {
-    description = "The Docker Registry URL for the Terraform Azure app"
-    default = "https://index.docker.io"
-}
-
 variable "DOCKER_USER" {
     description = "The Docker Account User for the Terraform Azure app"
     default = "madhuaxp"
 }
 
 variable "DOCKER_PASSWORD" {
+    sensitive = true
     description = "The Docker Account Password for the Terraform Azure app"
 }
 
@@ -40,6 +37,3 @@ variable "OAUTHLIB_INSECURE_TRANSPORT" {
     default = "1"
 }
 
-variable "MONGO_CONNECTION_URL" {
-    description = "MongoDB connection URL for the Terraform Azure app"
-}

@@ -76,6 +76,9 @@ docker run --env-file ./.env my-test-image tests/endtoend
 The URL for the app on Azure is : http://madhuazuretodo.azurewebsites.net/
 
 ### Running the application on Azure via Terraform
+The Infrastructure is provided in the Azure cloud by Terraform (IaC). The terraform configuration is in the main.tf file.
+The environment variables are provided by the app_settings block.
+The variables can be input during runtime using the variables.tf file
 The URL for the app on Azure via Terraform is : https://madhuterraformhelloapp.azurewebsites.net
 
 ### OAuth with GitHub
