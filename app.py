@@ -26,7 +26,7 @@ def create_app():
     app = Flask(__name__) 
 
     login_disabled = os.environ.get('LOGIN_DISABLED', 'False') == 'True'
-    log_level = os.environ.get('LOG_LEVEL')
+    log_level = os.environ.get('LOG_LEVEL', 'INFO')
     loggly_token = os.environ.get('LOGGLY_TOKEN')
     app.config['LOGIN_DISABLED'] = login_disabled
     app.config['LOG_LEVEL'] = log_level
